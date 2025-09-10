@@ -3,16 +3,17 @@
 namespace WheresMyLib.Models;
 
 /// <summary>
-/// Represents an Object placed in a <see cref="Level"/>.
+/// An Object instance placed in a <see cref="Level"/>.
 /// </summary>
+[XmlRoot(ElementName = "Object")]
 public class LevelObject
 {
-    [XmlAttribute("name")]
+    [XmlElement(ElementName = "AbsoluteLocation")]
+    public AbsoluteLocation AbsoluteLocation { get; set; }
+
+    [XmlArray(ElementName = "Properties")]
+    public List<Property> Properties { get; set; }
+
+    [XmlAttribute(AttributeName = "name")]
     public string Name { get; set; }
-
-    [XmlElement("AbsoluteLocation")]
-    public string Location { get; set; }
-
-    [XmlElement("Properties")]
-    public Property[] Properties { get; set; }
 }
