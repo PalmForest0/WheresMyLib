@@ -8,42 +8,34 @@ namespace WheresMyLib.Core;
 public class Game
 {
     public string DirectoryPath { get; private set; }
-
     public DirectoryInfo Assets { get; private set; }
 
-
-    private XmlSerializer levelSerializer = new XmlSerializer(typeof(Level));
+    public List<Level> Levels { get; private set; }
 
     public Game(string directoryPath)
     {
+        DirectoryPath = directoryPath;
+        Assets = new DirectoryInfo(Path.Combine(directoryPath, "assets"));
+
+        Levels = new List<Level>();
+
         LoadGameFiles(directoryPath);
     }
 
     private void LoadGameFiles(string directoryPath)
     {
-        DirectoryPath = directoryPath;
-        Assets = new DirectoryInfo(directoryPath);
-
-        LoadObjects(Path.Combine(Assets.FullName, "Objects"));
-        LoadLevels(Path.Combine(Assets.FullName, "Levels"));
+        LoadAllObjects(Path.Combine(Assets.FullName, "Objects"));
+        LoadAllLevels(Path.Combine(Assets.FullName, "Levels"));
     }
 
-    public void LoadObjects(string objectsPath)
+    public void LoadAllObjects(string objectsPath)
     {
 
     }
 
-    public void LoadLevels(string levelsPath)
+    public void LoadAllLevels(string levelsPath)
     {
-
-    }
-
-    public Level LoadLevel(string levelPath)
-    {
-        using var stringReader = new StringReader(File.ReadAllText(levelPath));
-        if(levelSerializer.Deserialize(stringReader) is Level level)
-            return level;
-
-        throw new InvalidOperationException($"Failed to deserialize {nameof(Level)} from file: {levelPath}");
+        foreach (var file in new DirectoryInfo(levelsPath).EnumerateFiles().Where(f => f.Extension == ".xml"))
+            Levels.Add(Level.Load(file.FullName));
     }
 }

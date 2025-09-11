@@ -1,7 +1,20 @@
-﻿using WheresMyLib.Core;
-using WheresMyLib.Models;
+﻿using System.Diagnostics;
+using WheresMyLib.Core;
 
+Stopwatch timer = Stopwatch.StartNew();
 Game game = new Game(@"C:\Water_ 1.18.9");
 
-Level level = game.LoadLevel(@"C:\Water_ 1.18.9\assets\Levels\06_DUAL_TOOLS.xml");
-Console.WriteLine(level.Objects[0].Name);
+timer.Stop();
+Print($"Successfully loaded game files in {timer.Elapsed.TotalSeconds:0.00} seconds.", ConsoleColor.DarkGreen);
+
+
+void Print(object content, ConsoleColor foregroundColor = ConsoleColor.White,  ConsoleColor backgroundColor = ConsoleColor.Black)
+{
+    Console.ForegroundColor = foregroundColor;
+    Console.BackgroundColor = backgroundColor;
+
+    Console.WriteLine(content);
+
+    Console.ForegroundColor = ConsoleColor.White;
+    Console.BackgroundColor = ConsoleColor.Black;
+}

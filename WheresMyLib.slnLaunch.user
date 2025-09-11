@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "WheresMyLib\\WheresMyLib.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Samples\\Example1\\Example1.csproj",
+        "Action": "StartWithoutDebugging"
+      }
+    ]
+  }
+]
