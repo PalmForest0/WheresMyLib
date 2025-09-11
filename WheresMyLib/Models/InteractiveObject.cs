@@ -5,13 +5,15 @@ namespace WheresMyLib.Models;
 /// <summary>
 /// Object template found in the game files at <c>assets/Objects/</c>.
 /// </summary>
+[XmlRoot(ElementName = "InteractiveObject")]
 public class InteractiveObject
 {
-    [XmlIgnore]
-    public string Name { get; set; }
-    [XmlIgnore]
-    public string Path { get; set; }
+    [XmlArray(ElementName = "Shapes")]
+    public List<Shape> Shapes { get; set; }
 
-    [XmlElement("DefaultProperties")]
-    public Property[] DefaultProperties { get; set; }
+    [XmlArray(ElementName = "Sprites")]
+    public List<Sprite> Sprites { get; set; }
+
+    [XmlArray(ElementName = "DefaultProperties")]
+    public List<Property> DefaultProperties { get; set; }
 }
