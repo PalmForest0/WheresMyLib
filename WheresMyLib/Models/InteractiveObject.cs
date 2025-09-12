@@ -16,4 +16,18 @@ public class InteractiveObject
 
     [XmlArray(ElementName = "DefaultProperties")]
     public List<Property> DefaultProperties { get; set; }
+
+
+    private static XmlSerializer ObjectSerializer = new XmlSerializer(typeof(InteractiveObject));
+
+    public static InteractiveObject Load(string filepath)
+    {
+        using var stringReader = new StringReader(File.ReadAllText(filepath));
+        if (ObjectSerializer.Deserialize(stringReader) is not InteractiveObject obj)
+            throw new InvalidOperationException($"Failed to deserialize {nameof(InteractiveObject)} from file: {filepath}");
+
+        // TODO: Load sprite images
+
+        return obj;
+    }
 }
