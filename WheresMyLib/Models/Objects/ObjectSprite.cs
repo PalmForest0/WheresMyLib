@@ -1,12 +1,12 @@
 ﻿using System.Xml.Serialization;
 
-namespace WheresMyLib.Models;
+namespace WheresMyLib.Models.Objects;
 
 /// <summary>
 /// Image data XML tag used in an <see cref="InteractiveObject"/>.
 /// </summary>
 [XmlRoot(ElementName = "Sprite")]
-public class Sprite
+public class ObjectSprite
 {
     [XmlAttribute(AttributeName = "filename")]
     public string Filename { get; set; }

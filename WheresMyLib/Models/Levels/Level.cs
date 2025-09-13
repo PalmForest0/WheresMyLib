@@ -1,7 +1,8 @@
 using SixLabors.ImageSharp;
 using System.Xml.Serialization;
+using WheresMyLib.Utility;
 
-namespace WheresMyLib.Models;
+namespace WheresMyLib.Models.Levels;
 
 /// <summary>
 /// A level found in the game files at <c>assets/Levels</c>
@@ -11,27 +12,25 @@ public class Level
 {
     [XmlElement(ElementName = "Object")]
     public List<LevelObject> Objects { get; set; }
+
     [XmlElement(ElementName = "Room")]
     public Room Room { get; set; }
+
     [XmlIgnore]
-    public Image Image { get; set; }
-
-
-    private static XmlSerializer LevelSerializer = new XmlSerializer(typeof(Level));
+    public Image Texture { get; set; }
 
     public static Level Load(string filepath)
     {
-        using var stringReader = new StringReader(File.ReadAllText(filepath));
-        if (LevelSerializer.Deserialize(stringReader) is not Level level)
-            throw new InvalidOperationException($"Failed to deserialize {nameof(Level)} from file: {filepath}");
+        Level level = SerializerUtils.Deserialize<Level>(File.ReadAllText(filepath));
 
+        // Attempt to load level PNG with the same name
         string imagePath = Path.ChangeExtension(filepath, ".png");
         if (File.Exists(imagePath))
         {
             using FileStream stream = new FileStream(imagePath, FileMode.Open, FileAccess.Read, FileShare.Read);
             using Image image = Image.Load(stream);
 
-            level.Image = image;
+            level.Texture = image;
         }
         
         return level;

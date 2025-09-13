@@ -1,12 +1,12 @@
 ﻿using System.Xml.Serialization;
 
-namespace WheresMyLib.Models;
+namespace WheresMyLib.Models.Objects;
 
 /// <summary>
-/// A shape of <see cref="Point"/>s used in a <see cref="Sprite"/>.
+/// A shape of <see cref="Point"/>s used in a <see cref="ObjectSprite"/>.
 /// </summary>
 [XmlRoot(ElementName = "Shape")]
-public class Shape
+public class ObjectShape
 {
     [XmlElement(ElementName = "Point")]
     public List<Point> Points { get; set; }

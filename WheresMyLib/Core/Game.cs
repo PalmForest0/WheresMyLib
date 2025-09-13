@@ -1,7 +1,9 @@
 ﻿using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
-using WheresMyLib.Models;
+using WheresMyLib.Models.Levels;
+using WheresMyLib.Models.Objects;
+using WheresMyLib.Models.Textures;
 using WheresMyLib.Utility;
 
 namespace WheresMyLib.Core;
@@ -13,6 +15,7 @@ public class Game
 
     public List<Level> Levels { get; private set; }
     public List<InteractiveObject> Objects { get; private set; }
+    public List<TextureData> Textures { get; private set; }
 
     public Game(string directoryPath)
     {
@@ -21,6 +24,7 @@ public class Game
 
         Levels = new List<Level>();
         Objects = new List<InteractiveObject>();
+        Textures = new List<TextureData>();
 
         LoadGameFiles(directoryPath);
     }
@@ -29,6 +33,7 @@ public class Game
     {
         LoadAllObjects(Path.Combine(Assets.FullName, "Objects"));
         LoadAllLevels(Path.Combine(Assets.FullName, "Levels"));
+        LoadAllTextures(Path.Combine(Assets.FullName, "Textures"));
     }
 
     public void LoadAllObjects(string objectsPath)
@@ -41,5 +46,11 @@ public class Game
     {
         foreach (var file in FileUtils.GetFiles(levelsPath, f => f.Extension == ".xml"))
             Levels.Add(Level.Load(file.FullName));
+    }
+
+    public void LoadAllTextures(string texturesPath)
+    {
+        foreach (var file in FileUtils.GetFiles(texturesPath, f => f.Extension == ".imagelist"))
+            Textures.Add(TextureData.Load(file.FullName));
     }
 }

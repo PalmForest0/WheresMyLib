@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace WheresMyLib.Models;
+namespace WheresMyLib.Models.Levels;
 
 /// <summary>
 /// An Object instance placed in a <see cref="Level"/>.
