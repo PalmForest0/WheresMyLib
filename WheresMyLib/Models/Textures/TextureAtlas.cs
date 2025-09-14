@@ -1,5 +1,6 @@
 ﻿using SixLabors.ImageSharp;
 using System.Xml.Serialization;
+using WheresMyLib.Core;
 using WheresMyLib.Utility;
 
 namespace WheresMyLib.Models.Textures;
@@ -10,7 +11,7 @@ namespace WheresMyLib.Models.Textures;
 /// <code><![CDATA[<ImageList imgSize="128 512" file="/Textures/Balloons.webp" textureBasePath="/Textures/">]]></code>
 /// </summary>
 [XmlRoot(ElementName = "ImageList")]
-public class TextureData
+public class TextureAtlas : RootModel
 {
     [XmlAttribute(AttributeName = "imgSize")]
     public string ImageSize { get; set; }
@@ -19,7 +20,7 @@ public class TextureData
     public string TexturePath { get; set; }
 
     [XmlAttribute(AttributeName = "textureBasePath")]
-    public string BasePath { get; set; }
+    public string TextureBasePath { get; set; }
 
     [XmlElement(ElementName = "Image")]
     public List<ImageData> Images { get; set; }
@@ -27,9 +28,9 @@ public class TextureData
     [XmlIgnore]
     public Image Texture { get; set; }
 
-    public static TextureData Load(string filepath)
+    public static TextureAtlas Load(string filepath, Game game)
     {
-        TextureData imageList = SerializerUtils.Deserialize<TextureData>(File.ReadAllText(filepath));
+        TextureAtlas imageList = SerializerUtils.Deserialize<TextureAtlas>(filepath, game);
 
         // Attempt to load texture file
         if (File.Exists(imageList.TexturePath))

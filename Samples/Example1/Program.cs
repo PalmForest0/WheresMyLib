@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using WheresMyLib.Core;
 using WheresMyLib.Models;
+using WheresMyLib.Models.Sprites;
+using WheresMyLib.Models.Textures;
 
 Stopwatch timer = Stopwatch.StartNew();
 Game game = new Game(@"C:\Water_ 1.18.9");

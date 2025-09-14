@@ -1,4 +1,5 @@
 using System.Xml.Serialization;
+using WheresMyLib.Core;
 using WheresMyLib.Utility;
 
 namespace WheresMyLib.Models.Objects;
@@ -7,7 +8,7 @@ namespace WheresMyLib.Models.Objects;
 /// Object template found in the game files at <c>assets/Objects/</c>.
 /// </summary>
 [XmlRoot(ElementName = "InteractiveObject")]
-public class InteractiveObject
+public class InteractiveObject : RootModel
 {
     [XmlArray(ElementName = "Shapes")]
     public List<ObjectShape> Shapes { get; set; }
@@ -18,9 +19,9 @@ public class InteractiveObject
     [XmlArray(ElementName = "DefaultProperties")]
     public List<Property> DefaultProperties { get; set; }
 
-    public static InteractiveObject Load(string filepath)
+    public static InteractiveObject Load(string filepath, Game game)
     {
-        InteractiveObject obj = SerializerUtils.Deserialize<InteractiveObject>(File.ReadAllText(filepath));
+        InteractiveObject obj = SerializerUtils.Deserialize<InteractiveObject>(filepath, game);
         return obj;
     }
 }

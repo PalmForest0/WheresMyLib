@@ -1,5 +1,6 @@
 using SixLabors.ImageSharp;
 using System.Xml.Serialization;
+using WheresMyLib.Core;
 using WheresMyLib.Utility;
 
 namespace WheresMyLib.Models.Levels;
@@ -8,7 +9,7 @@ namespace WheresMyLib.Models.Levels;
 /// A level found in the game files at <c>assets/Levels</c>
 /// </summary>
 [XmlRoot(ElementName = "Objects")]
-public class Level
+public class Level : RootModel
 {
     [XmlElement(ElementName = "Object")]
     public List<LevelObject> Objects { get; set; }
@@ -19,10 +20,10 @@ public class Level
     [XmlIgnore]
     public Image Texture { get; set; }
 
-    public static Level Load(string filepath)
+    public static Level Load(string filepath, Game game)
     {
-        Level level = SerializerUtils.Deserialize<Level>(File.ReadAllText(filepath));
-
+        Level level = SerializerUtils.Deserialize<Level>(filepath, game);
+        
         // Attempt to load level PNG with the same name
         string imagePath = Path.ChangeExtension(filepath, ".png");
         if (File.Exists(imagePath))
