@@ -6,7 +6,7 @@ using WheresMyLib.Utility;
 namespace WheresMyLib.Models.Textures;
 
 /// <summary>
-/// Provides a list of <see cref="ImageData"/>s from a single texture file. Example:
+/// Provides a list of <see cref="ImageRect"/>s from a single texture file. Example:
 /// <br/>
 /// <code><![CDATA[<ImageList imgSize="128 512" file="/Textures/Balloons.webp" textureBasePath="/Textures/">]]></code>
 /// </summary>
@@ -20,26 +20,32 @@ public class TextureAtlas : RootModel
     public string TexturePath { get; set; }
 
     [XmlAttribute(AttributeName = "textureBasePath")]
-    public string TextureBasePath { get; set; }
+    private string TextureBasePath { get; set; }
 
     [XmlElement(ElementName = "Image")]
-    public List<ImageData> Images { get; set; }
-
-    [XmlIgnore]
-    public Image Texture { get; set; }
+    public List<ImageRect> ImageRects { get; set; }
 
     public static TextureAtlas Load(string filepath, Game game)
     {
         TextureAtlas imageList = SerializerUtils.Deserialize<TextureAtlas>(filepath, game);
 
-        // Attempt to load texture file
-        if (File.Exists(imageList.TexturePath))
-        {
-            using FileStream stream = new FileStream(imageList.TexturePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-            using Image image = Image.Load(stream);
-            imageList.Texture = image;
-        }
+        // Provide each image with a reference to its parent atlas
+        foreach (ImageRect imageRect in imageList.ImageRects)
+            imageRect.ParentAtlas = imageList;
 
         return imageList;
+    }
+
+    public Image GetTexture(Game game)
+    {
+        // Attempt to load texture file
+        string texturePath = Path.Join(game.Assets.FullName, TexturePath.Replace("/", "\\"));
+        if (File.Exists(texturePath))
+        {
+            using FileStream stream = new FileStream(texturePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+            return Image.Load(stream);
+        }
+
+        return null;
     }
 }

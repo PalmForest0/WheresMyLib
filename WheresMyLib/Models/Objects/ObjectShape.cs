@@ -3,9 +3,8 @@
 namespace WheresMyLib.Models.Objects;
 
 /// <summary>
-/// A shape of <see cref="Point"/>s used in a <see cref="ObjectSprite"/>.
+/// A shape of <see cref="Point"/>s used in a <see cref="SpriteReference"/>.
 /// </summary>
-[XmlRoot(ElementName = "Shape")]
 public class ObjectShape
 {
     [XmlElement(ElementName = "Point")]

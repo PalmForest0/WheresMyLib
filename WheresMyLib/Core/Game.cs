@@ -29,20 +29,20 @@ public class Game
         DirectoryPath = directoryPath;
         Assets = new DirectoryInfo(assetsPath);
 
-        Levels = new List<Level>();
-        Objects = new List<InteractiveObject>();
         Textures = new List<TextureAtlas>();
         Sprites = new List<Sprite>();
+        Levels = new List<Level>();
+        Objects = new List<InteractiveObject>();
 
         LoadGameFiles(Assets.FullName);
     }
 
     private void LoadGameFiles(string assetsPath)
     {
-        LoadAllObjects(Path.Combine(assetsPath, "Objects"));
-        LoadAllLevels(Path.Combine(assetsPath, "Levels"));
         LoadAllTextures(Path.Combine(assetsPath, "Textures"));
         LoadAllSprites(Path.Combine(assetsPath, "Sprites"));
+        LoadAllObjects(Path.Combine(assetsPath, "Objects"));
+        LoadAllLevels(Path.Combine(assetsPath, "Levels"));
     }
 
     private void LoadAllObjects(string objectsPath)
@@ -77,7 +77,7 @@ public class Game
             Sprites.Add(Sprite.Load(file.FullName, this));
     }
     
-    private static bool IsMatchingModel(RootModel model, string filter) => model.FileInfo.FullName.ToLower().Contains(filter.ToLower());
+    private static bool IsMatchingModel(RootModel model, string filter) => model.FileInfo.FullName.ToLower().Contains(filter.ToLower().Replace("/", "\\"));
     
     public InteractiveObject GetObject(string name) => Objects.Find(obj => IsMatchingModel(obj, name));
     public Level GetLevel(string name) => Levels.Find(level => IsMatchingModel(level, name));

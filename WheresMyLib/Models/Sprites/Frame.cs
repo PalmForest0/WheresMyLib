@@ -16,5 +16,5 @@ public class Frame
     public int Repeat { get; set; } = 0;
     
     [XmlIgnore]
-    public ImageData ImageData { get; set; }
+    public ImageRect ImageRect { get; set; }
 }
