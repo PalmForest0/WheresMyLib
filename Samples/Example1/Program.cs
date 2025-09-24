@@ -20,7 +20,7 @@ img.Save("bomb.png");
 void PrintTextures(Game game)
 {
     // Print all textures
-    foreach (var texture in game.Textures)
+    foreach (var texture in game.TextureAtlases)
     {
         Print($"Texture: {texture.TexturePath} ({texture.ImageRects.Count} images)", ConsoleColor.Cyan);
         foreach (var image in texture.ImageRects)

@@ -18,7 +18,7 @@ public class Game
 
     public List<Level> Levels { get; private set; }
     public List<InteractiveObject> Objects { get; private set; }
-    public List<TextureAtlas> Textures { get; private set; }
+    public List<TextureAtlas> TextureAtlases { get; private set; }
     public List<Sprite> Sprites { get; private set; }
     
     public Game(string directoryPath)
@@ -29,7 +29,7 @@ public class Game
         DirectoryPath = directoryPath;
         Assets = new DirectoryInfo(assetsPath);
 
-        Textures = new List<TextureAtlas>();
+        TextureAtlases = new List<TextureAtlas>();
         Sprites = new List<Sprite>();
         Levels = new List<Level>();
         Objects = new List<InteractiveObject>();
@@ -66,7 +66,7 @@ public class Game
         FileUtils.ValidateDirectory(texturesPath);
 
         foreach (var file in FileUtils.GetFiles(texturesPath, f => f.Extension == ".imagelist"))
-            Textures.Add(TextureAtlas.Load(file.FullName, this));
+            TextureAtlases.Add(TextureAtlas.Load(file.FullName, this));
     }
     
     private void LoadAllSprites(string spritesPath)
@@ -81,6 +81,6 @@ public class Game
     
     public InteractiveObject GetObject(string name) => Objects.Find(obj => IsMatchingModel(obj, name));
     public Level GetLevel(string name) => Levels.Find(level => IsMatchingModel(level, name));
-    public TextureAtlas GetTexture(string name) => Textures.Find(texture => IsMatchingModel(texture, name));
+    public TextureAtlas GetTexture(string name) => TextureAtlases.Find(texture => IsMatchingModel(texture, name));
     public Sprite GetSprite(string name) => Sprites.Find(sprite => IsMatchingModel(sprite, name));
 }
