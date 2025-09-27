@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 using WheresMyLib.Core;
 using WheresMyLib.Exceptions;
 using WheresMyLib.Models;
@@ -19,7 +13,7 @@ public static class SerializerUtils
     {
         if (!File.Exists(filepath))
             throw new InvalidGameFilesException(filepath);
-        
+
         var type = typeof(T);
         if (!Serializers.ContainsKey(type))
             Serializers[type] = new XmlSerializer(type);
@@ -29,6 +23,7 @@ public static class SerializerUtils
             throw new InvalidOperationException($"Failed to deserialize {type.Name} from XML.");
 
         obj.FileInfo = new FileInfo(filepath);
+        obj.Game = game;
         return obj;
     }
 }

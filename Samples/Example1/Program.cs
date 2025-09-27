@@ -6,16 +6,27 @@ Stopwatch timer = Stopwatch.StartNew();
 Game game = new Game(@"C:\Water_ 1.18.9");
 
 timer.Stop();
-Print($"Successfully loaded game files in {timer.Elapsed.TotalSeconds:0.00} seconds.", ConsoleColor.DarkGreen);
+Print($"Successfully loaded game files in {timer.Elapsed.TotalSeconds:0.00} seconds0.\n\n", ConsoleColor.DarkGreen);
 
-var bomb = game.GetObject("bomb");
-Image img = bomb.Sprites[0].Sprite.Animations[0].Frames[0].ImageRect.GetCroppedImage(game);
-img.Save("bomb.png");
+// Export Object textures
+foreach (var obj in game.Objects)
+{
+    if (!Directory.Exists("Objects"))
+        Directory.CreateDirectory("Objects");
 
-//if(bomb.Sprites[0].SpriteData is not null)
-//    Print($"Bomb sprite has {bomb.Sprites[0].SpriteData.Animations.Count} animations.", ConsoleColor.Green);
-//else
-//    Print("Bomb sprite not found!", ConsoleColor.Red);
+    Image texture = obj.GetCombinedTexture();
+    if (texture is not null)
+    {
+        texture.Save(Path.Combine("Objects", Path.ChangeExtension($"{obj.FileInfo.Name}", ".png")));
+        texture.Dispose();
+
+        Print($"Successfully saved object texture '{Path.ChangeExtension($"{obj.FileInfo.Name}", ".png")}'.", ConsoleColor.DarkGreen);
+    }
+    else
+    {
+        Print($"Failed to save object texture '{Path.ChangeExtension($"{obj.FileInfo.Name}", ".png")}'.", ConsoleColor.Red);
+    }
+}
 
 void PrintTextures(Game game)
 {
@@ -28,7 +39,7 @@ void PrintTextures(Game game)
     }
 }
 
-void Print(object content, ConsoleColor foregroundColor = ConsoleColor.White,  ConsoleColor backgroundColor = ConsoleColor.Black)
+void Print(object content, ConsoleColor foregroundColor = ConsoleColor.White, ConsoleColor backgroundColor = ConsoleColor.Black)
 {
     Console.ForegroundColor = foregroundColor;
     Console.BackgroundColor = backgroundColor;
