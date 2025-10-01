@@ -1,6 +1,7 @@
 ﻿using SixLabors.ImageSharp;
 using System.Xml.Serialization;
 using WheresMyLib.Core;
+using WheresMyLib.Models.Types;
 using WheresMyLib.Utility;
 
 namespace WheresMyLib.Models.Textures;
@@ -13,33 +14,40 @@ namespace WheresMyLib.Models.Textures;
 [XmlRoot(ElementName = "ImageList")]
 public class TextureAtlas : RootModel
 {
-    [XmlAttribute(AttributeName = "imgSize")]
-    public string ImageSize { get; set; }
+    [XmlAttribute(AttributeName = "drawScale")]
+    public float DrawScale { get; set; }
+
+    [XmlIgnore]
+    public Pos ImageSize { get; set; }
 
     [XmlAttribute(AttributeName = "file")]
-    public string TexturePath { get; set; }
-
-    [XmlAttribute(AttributeName = "textureBasePath")]
-    private string TextureBasePath { get; set; }
+    public string ImagePath { get; set; }
 
     [XmlElement(ElementName = "Image")]
-    public List<ImageRect> ImageRects { get; set; }
+    public List<ImageRect> Rects { get; set; }
+
+    [XmlAttribute(AttributeName = "imgSize")]
+    private string ImageSizeString
+    {
+        get => ImageSize.ToString();
+        set => ImageSize = Pos.FromString(value);
+    }
 
     public static TextureAtlas Load(string filepath, Game game)
     {
         TextureAtlas imageList = SerializerUtils.Deserialize<TextureAtlas>(filepath, game);
 
         // Provide each image with a reference to its parent atlas
-        foreach (ImageRect imageRect in imageList.ImageRects)
+        foreach (ImageRect imageRect in imageList.Rects)
             imageRect.ParentAtlas = imageList;
 
         return imageList;
     }
 
-    public Image GetTexture()
+    public Image GetImageFile()
     {
         // Attempt to load texture file
-        string texturePath = Path.Join(Game.Assets.FullName, TexturePath.Replace("/", "\\"));
+        string texturePath = Path.Join(Game.Assets.FullName, ImagePath.Replace("/", "\\"));
         if (File.Exists(texturePath))
         {
             using FileStream stream = new FileStream(texturePath, FileMode.Open, FileAccess.Read, FileShare.Read);

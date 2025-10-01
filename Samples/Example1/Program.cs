@@ -1,5 +1,4 @@
-﻿using SixLabors.ImageSharp;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using WheresMyLib.Core;
 
 Stopwatch timer = Stopwatch.StartNew();
@@ -9,32 +8,32 @@ timer.Stop();
 Print($"Successfully loaded game files in {timer.Elapsed.TotalSeconds:0.00} seconds0.\n\n", ConsoleColor.DarkGreen);
 
 // Export Object textures
-foreach (var obj in game.Objects)
-{
-    if (!Directory.Exists("Objects"))
-        Directory.CreateDirectory("Objects");
+//foreach (var obj in game.Objects)
+//{
+//    if (!Directory.Exists("Objects"))
+//        Directory.CreateDirectory("Objects");
 
-    Image texture = obj.GetCombinedTexture();
-    if (texture is not null)
-    {
-        texture.Save(Path.Combine("Objects", Path.ChangeExtension($"{obj.FileInfo.Name}", ".png")));
-        texture.Dispose();
+//    Image texture = obj.GetCombinedTexture();
+//    if (texture is not null)
+//    {
+//        texture.Save(Path.Combine("Objects", Path.ChangeExtension($"{obj.FileInfo.Name}", ".png")));
+//        texture.Dispose();
 
-        Print($"Successfully saved object texture '{Path.ChangeExtension($"{obj.FileInfo.Name}", ".png")}'.", ConsoleColor.DarkGreen);
-    }
-    else
-    {
-        Print($"Failed to save object texture '{Path.ChangeExtension($"{obj.FileInfo.Name}", ".png")}'.", ConsoleColor.Red);
-    }
-}
+//        Print($"Successfully saved object texture '{Path.ChangeExtension($"{obj.FileInfo.Name}", ".png")}'.", ConsoleColor.DarkGreen);
+//    }
+//    else
+//    {
+//        Print($"Failed to save object texture '{Path.ChangeExtension($"{obj.FileInfo.Name}", ".png")}'.", ConsoleColor.Red);
+//    }
+//}
 
 void PrintTextures(Game game)
 {
     // Print all textures
     foreach (var texture in game.TextureAtlases)
     {
-        Print($"Texture: {texture.TexturePath} ({texture.ImageRects.Count} images)", ConsoleColor.Cyan);
-        foreach (var image in texture.ImageRects)
+        Print($"Texture: {texture.ImagePath} ({texture.Rects.Count} images)", ConsoleColor.Cyan);
+        foreach (var image in texture.Rects)
             Print($" - Image: {image.Name} Rect: {image.Rect}", ConsoleColor.DarkCyan);
     }
 }

@@ -26,4 +26,6 @@ public static class SerializerUtils
         obj.Game = game;
         return obj;
     }
+
+    public
 }

@@ -13,9 +13,9 @@ int passedTests = 0;
 
 if(DoListCheck(game.TextureAtlases, $"{nameof(TextureAtlas)} loading"))
 {
-    DoStringCheck(game.TextureAtlases[0].TexturePath, $"{nameof(TextureAtlas.TexturePath)}", 1);
+    DoStringCheck(game.TextureAtlases[0].ImagePath, $"{nameof(TextureAtlas.ImagePath)}", 1);
     DoStringCheck(game.TextureAtlases[0].ImageSize, $"{nameof(TextureAtlas.ImageSize)}", 1);
-    DoListCheck(game.TextureAtlases[0].ImageRects, $"{nameof(TextureAtlas.ImageRects)}", 1);
+    DoListCheck(game.TextureAtlases[0].Rects, $"{nameof(TextureAtlas.Rects)}", 1);
 }
 
 

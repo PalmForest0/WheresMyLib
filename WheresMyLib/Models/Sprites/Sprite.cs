@@ -27,7 +27,7 @@ public class Sprite : RootModel
                 animation.Atlas = atlas;
                 
                 foreach (Frame frame in animation.Frames)
-                    frame.ImageRect = atlas.ImageRects.Find(i => i.Name == frame.Name);
+                    frame.ImageRect = atlas.Rects.Find(i => i.Name == frame.Name);
             }
         }
         

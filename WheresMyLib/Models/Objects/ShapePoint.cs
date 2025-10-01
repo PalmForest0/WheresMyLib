@@ -1,7 +1,6 @@
 ﻿using System.Xml.Serialization;
-using WheresMyLib.Models.Objects;
 
-namespace WheresMyLib.Models;
+namespace WheresMyLib.Models.Objects;
 
 /// <summary>
 /// Represents a 2D position used in a <see cref="ObjectShape"/> tag.

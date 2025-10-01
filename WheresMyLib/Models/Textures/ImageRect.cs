@@ -1,6 +1,7 @@
 ﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using System.Xml.Serialization;
+using WheresMyLib.Models.Types;
 
 namespace WheresMyLib.Models.Textures;
 
@@ -14,68 +15,46 @@ public class ImageRect
 {
     [XmlAttribute(AttributeName = "name")]
     public string Name { get; set; }
+    [XmlIgnore] public TextureAtlas ParentAtlas { get; set; }
+    [XmlIgnore] public Pos Offset { get; set; }
+    [XmlIgnore] public Pos Size { get; set; }
+    [XmlIgnore] public Rect Rect { get; set; }
+
 
     [XmlAttribute(AttributeName = "offset")]
-    public string Offset { get; set; }
+    private string OffsetString
+    {
+        get => Offset.ToString();
+        set => Offset = Pos.FromString(value);
+    }
 
     [XmlAttribute(AttributeName = "size")]
-    public string Size { get; set; }
+    private string SizeString
+    {
+        get => Size.ToString();
+        set => Size = Pos.FromString(value);
+    }
 
     [XmlAttribute(AttributeName = "rect")]
-    public string Rect { get; set; }
-
-    [XmlIgnore]
-    public TextureAtlas ParentAtlas { get; set; }
-
-    public Image GetCroppedImage()
+    private string RectString
     {
-        Image texture = ParentAtlas.GetTexture();
+        get => Rect.ToString();
+        set => Rect = Rect.FromString(value);
+    }
+
+    /// <summary>
+    /// Exports the image 
+    /// </summary>
+    /// <returns></returns>
+    public Image ExportImage()
+    {
+        Image texture = ParentAtlas.GetImageFile();
 
         if (texture is null)
             return null;
 
         // Get cropped image using the paresed rect
-        Rectangle cropRect = GetRectangle();
-        Image croppedImage = texture.Clone(ctx => ctx.Crop(cropRect));
+        Image croppedImage = texture.Clone(ctx => ctx.Crop((int)Rect.Width, (int)Rect.Height));
         return croppedImage;
-    }
-
-    public Rectangle GetRectangle()
-    {
-        string[] parts = Rect.Split(' ');
-
-        if (parts.Length != 4)
-            return Rectangle.Empty;
-
-        if (int.TryParse(parts[0], out int x) && int.TryParse(parts[1], out int y) && int.TryParse(parts[2], out int width) && int.TryParse(parts[3], out int height))
-            return new Rectangle(x, y, width, height);
-
-        return Rectangle.Empty;
-    }
-
-    public Point GetOffset()
-    {
-        string[] parts = Offset.Split(' ');
-
-        if (parts.Length != 2)
-            return Point.Empty;
-
-        if (int.TryParse(parts[0], out int x) && int.TryParse(parts[1], out int y))
-            return new Point(x, y);
-
-        return Point.Empty;
-    }
-
-    public Point GetSize()
-    {
-        string[] parts = Size.Split(' ');
-
-        if (parts.Length != 2)
-            return Point.Empty;
-
-        if (int.TryParse(parts[0], out int x) && int.TryParse(parts[1], out int y))
-            return new Point(x, y);
-
-        return Point.Empty;
     }
 }
