@@ -47,7 +47,7 @@ public class TextureAtlas : RootModel
     public Image GetImageFile()
     {
         // Attempt to load texture file
-        string texturePath = Path.Join(Game.Assets.FullName, ImagePath.Replace("/", "\\"));
+        string texturePath = Path.Join(Game.AssetsPath, ImagePath.Replace("/", "\\"));
         if (File.Exists(texturePath))
         {
             using FileStream stream = new FileStream(texturePath, FileMode.Open, FileAccess.Read, FileShare.Read);

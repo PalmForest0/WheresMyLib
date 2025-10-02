@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Xml.Linq;
 
 namespace WheresMyLib.Models.Types;
 
@@ -26,6 +27,14 @@ public struct Pos
         }
 
         throw new InvalidOperationException($"Unable to parse string \"{str}\" to a point.");
+    }
+
+    public static Pos FromAbsoluteLocation(XElement xmlElement)
+    {
+        if (xmlElement is null || xmlElement.Name != "AbsoluteLocation" || !xmlElement.HasAttributes)
+            throw new InvalidOperationException($"Invalid AbsolutePosition XML element: \"{xmlElement}\".");
+
+        return FromString(xmlElement.Attribute("value").Value);
     }
 
     public override string ToString() => $"{X} {Y}";

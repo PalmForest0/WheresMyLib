@@ -1,7 +1,4 @@
 using System.Xml.Serialization;
-using WheresMyLib.Core;
-using WheresMyLib.Models.Sprites;
-using WheresMyLib.Utility;
 
 namespace WheresMyLib.Models.Objects;
 
@@ -23,19 +20,19 @@ public class InteractiveObject : RootModel
     [XmlArrayItem(ElementName = "Property")]
     public List<Property> DefaultProperties { get; set; }
 
-    public static InteractiveObject Load(string filepath, Game game)
-    {
-        InteractiveObject obj = SerializerUtils.Deserialize<InteractiveObject>(filepath, game);
+    //public static InteractiveObject Load(string filepath, Game game)
+    //{
+    //    InteractiveObject obj = SerializerUtils.Deserialize<InteractiveObject>(filepath, game);
 
-        foreach (SpriteReference sprRef in obj.Sprites)
-        {
-            Sprite sprite = game.GetSprite(sprRef.Filename);
-            if (sprite is not null)
-                sprRef.Sprite = sprite;
-        }
+    //    foreach (SpriteReference sprRef in obj.Sprites)
+    //    {
+    //        Sprite sprite = game.GetSprite(sprRef.Filename);
+    //        if (sprite is not null)
+    //            sprRef.Sprite = sprite;
+    //    }
 
-        return obj;
-    }
+    //    return obj;
+    //}
 
     //public Image GetCombinedTexture()
     //{

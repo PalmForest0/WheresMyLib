@@ -1,11 +1,15 @@
 ﻿using System.Diagnostics;
 using WheresMyLib.Core;
+using WheresMyLib.Models.Levels;
 
 Stopwatch timer = Stopwatch.StartNew();
 Game game = new Game(@"C:\Water_ 1.18.9");
 
 timer.Stop();
 Print($"Successfully loaded game files in {timer.Elapsed.TotalSeconds:0.00} seconds0.\n\n", ConsoleColor.DarkGreen);
+
+Level level = game.GetLevel("BHVR_swirlie_bomb");
+Print("yay loaded level: " + level.Name, ConsoleColor.DarkGreen);
 
 // Export Object textures
 //foreach (var obj in game.Objects)
@@ -27,16 +31,16 @@ Print($"Successfully loaded game files in {timer.Elapsed.TotalSeconds:0.00} seco
 //    }
 //}
 
-void PrintTextures(Game game)
-{
-    // Print all textures
-    foreach (var texture in game.TextureAtlases)
-    {
-        Print($"Texture: {texture.ImagePath} ({texture.Rects.Count} images)", ConsoleColor.Cyan);
-        foreach (var image in texture.Rects)
-            Print($" - Image: {image.Name} Rect: {image.Rect}", ConsoleColor.DarkCyan);
-    }
-}
+//void PrintTextures(Game game)
+//{
+//    // Print all textures
+//    foreach (var texture in game.TextureAtlases)
+//    {
+//        Print($"Texture: {texture.ImagePath} ({texture.Rects.Count} images)", ConsoleColor.Cyan);
+//        foreach (var image in texture.Rects)
+//            Print($" - Image: {image.Name} Rect: {image.Rect}", ConsoleColor.DarkCyan);
+//    }
+//}
 
 void Print(object content, ConsoleColor foregroundColor = ConsoleColor.White, ConsoleColor backgroundColor = ConsoleColor.Black)
 {
