@@ -15,7 +15,7 @@ public struct Pos
     /// </summary>
     public static Pos FromString(string str)
     {
-        string[] parts = str.Split(' ');
+        string[] parts = str.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
         if (parts.Length != 2)
             throw new InvalidOperationException($"Invalid point string: \"{str}\".");

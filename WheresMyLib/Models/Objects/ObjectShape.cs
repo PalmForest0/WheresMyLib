@@ -1,4 +1,4 @@
-﻿using System.Xml.Serialization;
+﻿using WheresMyLib.Models.Types;
 
 namespace WheresMyLib.Models.Objects;
 
@@ -7,6 +7,5 @@ namespace WheresMyLib.Models.Objects;
 /// </summary>
 public class ObjectShape
 {
-    [XmlElement(ElementName = "Point")]
-    public List<ShapePoint> Points { get; set; }
+    public List<Pos> Points { get; set; }
 }

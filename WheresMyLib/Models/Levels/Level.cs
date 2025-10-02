@@ -9,21 +9,12 @@ namespace WheresMyLib.Models.Levels;
 /// <summary>
 /// A level found in the game files at <c>assets/Levels</c>
 /// </summary>
-public class Level
+public class Level(string name, Game game) : GameFile(name, game)
 {
-    public Game Game { get; private set; }
-    public string Name { get; private set; }
-
     public List<LevelObject> Objects { get; set; }
     public Room Room { get; set; }
     public Image Image { get; set; }
     public Dictionary<string, string> Properties { get; set; }
-
-    public Level(string name, Game game)
-    {
-        Game = game;
-        Name = FileUtils.SanitiseFileName(name);
-    }
 
     public static Level Load(string filepath, Game game)
     {
@@ -40,7 +31,7 @@ public class Level
             })
             .ToList();
 
-        // Load level room
+        // Load level room (why do some levels not have a room ._. how is that possible?)
         Room room = xml.Root.Element("Room") is null ? null : new Room()
         {
             AbsoluteLocation = Pos.FromAbsoluteLocation(xml.Root.Element("Room").Element("AbsoluteLocation"))

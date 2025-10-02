@@ -21,7 +21,7 @@ if(DoListCheck(game.TextureAtlases, $"{nameof(TextureAtlas)} loading"))
 
 DoListCheck(game.Levels, $"{nameof(Level)} loading");
 DoListCheck(game.Sprites, $"{nameof(Sprite)} loading");
-DoListCheck(game.Objects, $"{nameof(InteractiveObject)} loading");
+DoListCheck(game.Objects, $"{nameof(GameObject)} loading");
 
 EndTests(passedTests, totalTests, timer);
 
