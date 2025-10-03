@@ -9,16 +9,16 @@ namespace WheresMyLib.Models.Levels;
 /// <summary>
 /// A level found in the game files at <c>assets/Levels</c>
 /// </summary>
-public class Level(string name, Game game) : GameFile(name, game)
+public class Level(string name, Game game) : GameFile(name, game), IGameFileLoader<Level>
 {
     public List<LevelObject> Objects { get; set; }
     public Room Room { get; set; }
     public Image Image { get; set; }
     public Dictionary<string, string> Properties { get; set; }
 
-    public static Level Load(string filepath, Game game)
+    public static Level Load(string filePath, Game game)
     {
-        XDocument xml = XDocument.Load(filepath);
+        XDocument xml = XDocument.Load(filePath);
 
         // Load level objects
         List<LevelObject> objects = xml.Root
@@ -42,7 +42,7 @@ public class Level(string name, Game game) : GameFile(name, game)
 
         // Attempt to load level PNG with the same name
         Image image = null;
-        string imagePath = Path.ChangeExtension(filepath, ".png");
+        string imagePath = Path.ChangeExtension(filePath, ".png");
 
         if (File.Exists(imagePath))
         {
@@ -50,48 +50,54 @@ public class Level(string name, Game game) : GameFile(name, game)
             image = Image.Load(stream);
         }
 
-        return new Level(Path.GetFileNameWithoutExtension(filepath), game)
+        return new Level(Path.GetFileNameWithoutExtension(filePath), game)
         {
             Objects = objects,
             Room = room,
             Properties = properties,
-            Image = image,
+            Image = image
         };
     }
 
 
     /// <summary>
-    /// Exports Level XML and PNG to the original location the level was loaded from. 
+    /// Saves this <see cref="Level"/> as an <c>XML</c> file and a <c>PNG</c> image with a matching name to the loaded game's <c>LevelPath</c>.
     /// </summary>
     public void Save() => Export(this, Game.LevelsPath);
 
     /// <summary>
-    /// Exports Level XML and PNG to a custom directory.
+    /// Saves this <see cref="Level"/> as an <c>XML</c> file and a <c>PNG</c> image with a matching name to a different directory.
+    /// </summary>
+    /// <param name="directory">Directory path to export the <see cref="Level"/> data and image to.</param>
+    public void Save(string directory) => Export(this, directory);
+
+    /// <summary>
+    /// Exports this <see cref="Level"/>'s XML data and PNG image to a custom directory.
     /// </summary>
     /// <param name="directoryPath">Custom directory path to export level data and image to.</param>
     public static void Export(Level level, string directoryPath)
     {
         XDocument xml = new XDocument(
-            new XDeclaration("1.0", null, null),
-
-            // Export level objects
             new XElement("Objects",
-                level.Objects.Select(obj =>
-                    new XElement("Object",
-                        new XAttribute("name", obj.Name),
-                        new XElement("AbsoluteLocation", new XAttribute("value", obj.AbsoluteLocation.ToString())),
-                        new XElement("Properties", XmlUtils.ExportProperties(obj.Properties))
-                    )
-                )
-            ),
 
-            // Export level room
-            new XElement("Room", new XElement("AbsoluteLocation", new XAttribute("value", level.Room.AbsoluteLocation.ToString()))),
+                // Export level objects
+                level.Objects.Select(obj => new XElement("Object",
+                    new XAttribute("name", obj.Name),
+                    new XElement("AbsoluteLocation", new XAttribute("value", obj.AbsoluteLocation.ToString())),
+                    new XElement("Properties", XmlUtils.ExportProperties(obj.Properties))
+                )),
 
-            // Export level properties (optional)
-            new XElement("Properties", XmlUtils.ExportProperties(level.Properties))
+                // Export level room (also optional apparently)
+                level.Room is not null
+                    ? new XElement("Room", new XElement("AbsoluteLocation", new XAttribute("value", level.Room.AbsoluteLocation.ToString())))
+                    : null,
+
+                // Export level properties (optional)
+                level.Properties.Any() ? new XElement("Properties", XmlUtils.ExportProperties(level.Properties)) : null
+            )
         );
 
+        Directory.CreateDirectory(directoryPath);
         string xmlPath = Path.Join(directoryPath, Path.ChangeExtension(level.Name, ".xml"));
         xml.Save(xmlPath);
 

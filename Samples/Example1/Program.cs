@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using WheresMyLib.Core;
+using WheresMyLib.Models.Levels;
 using WheresMyLib.Models.Objects;
 
 Stopwatch timer = Stopwatch.StartNew();
@@ -9,7 +10,10 @@ timer.Stop();
 Print($"Successfully loaded game files in {timer.Elapsed.TotalSeconds:0.00} seconds0.\n\n", ConsoleColor.DarkGreen);
 
 GameObject obj = game.GetObject("cup_5blocks");
-Print("yippee");
+obj.Save("Test");
+
+Level level = game.GetLevel("bhvr_swirlie_bomb");
+level.Save(@"Test");
 
 // Export Object textures
 //foreach (var obj in game.Objects)

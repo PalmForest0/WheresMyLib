@@ -6,7 +6,7 @@ namespace WheresMyLib.Models.Objects;
 /// <summary>
 /// Image data XML tag used in an <see cref="GameObject"/>.
 /// </summary>
-public class SpriteReference
+public class ObjectSprite
 {
     public string Filename { get; set; }
     public int Angle { get; set; }
@@ -15,5 +15,5 @@ public class SpriteReference
     public bool IsBackground { get; set; } = false;
     public bool Visible { get; set; } = true;
 
-    public Sprite Sprite { get; set; }
+    public List<Animation> Animations { get; set; }
 }

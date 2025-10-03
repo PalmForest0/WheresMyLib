@@ -1,5 +1,4 @@
 using System.Xml.Linq;
-using System.Xml.Serialization;
 using WheresMyLib.Core;
 using WheresMyLib.Models.Types;
 using WheresMyLib.Utility;
@@ -9,25 +8,24 @@ namespace WheresMyLib.Models.Objects;
 /// <summary>
 /// Object template found in the game files at <c>assets/Objects/</c>.
 /// </summary>
-[XmlRoot(ElementName = "InteractiveObject")]
-public class GameObject(string name, Game game) : GameFile(name, game)
+public class GameObject(string name, Game game) : GameFile(name, game), IGameFileLoader<GameObject>
 {
     public List<ObjectShape> Shapes { get; set; }
-    public List<SpriteReference> Sprites { get; set; }
+    public List<ObjectSprite> Sprites { get; set; }
     public Dictionary<string, string> DefaultProperties { get; set; }
 
-    public IEnumerable<SpriteReference> BackgroundSprites => Sprites.Where(s => s.IsBackground);
-    public IEnumerable<SpriteReference> ForegroundSprites => Sprites.Where(s => !s.IsBackground);
+    public IEnumerable<ObjectSprite> BackgroundSprites => Sprites.Where(s => s.IsBackground);
+    public IEnumerable<ObjectSprite> ForegroundSprites => Sprites.Where(s => !s.IsBackground);
 
-    public static GameObject Load(string filepath, Game game)
+    public static GameObject Load(string filePath, Game game)
     {
-        XDocument xml = XDocument.Load(filepath);
+        XDocument xml = XDocument.Load(filePath);
 
         // Load Object sprites and seperate them by isBackground attribute
-        List<SpriteReference> sprites = xml.Root.Element("Sprites").Elements("Sprite").Select(e =>
+        List<ObjectSprite> sprites = xml.Root.Element("Sprites").Elements("Sprite").Select(e =>
         {
-            SpriteReference spr = ParseSprite(e);
-            spr.Sprite = game.Sprites.Find(s => FileUtils.MatchPath(s.FileInfo.FullName, spr.Filename));
+            ObjectSprite spr = ParseSprite(e);
+            spr.Animations = game.Sprites.Find(s => FileUtils.MatchPath(s.FileInfo.FullName, spr.Filename))?.Animations;
             return spr;
         }).ToList();
 
@@ -40,7 +38,7 @@ public class GameObject(string name, Game game) : GameFile(name, game)
             Points = s.Elements("Point").Select(p => Pos.FromString(p.Attribute("pos").Value)).ToList()
         }).ToList();
 
-        return new GameObject(Path.GetFileNameWithoutExtension(filepath), game)
+        return new GameObject(Path.GetFileNameWithoutExtension(filePath), game)
         {
             Shapes = shapes,
             Sprites = sprites,
@@ -48,7 +46,7 @@ public class GameObject(string name, Game game) : GameFile(name, game)
         };
     }
 
-    private static SpriteReference ParseSprite(XElement spriteElement) => new SpriteReference()
+    private static ObjectSprite ParseSprite(XElement spriteElement) => new ObjectSprite()
     {
         Filename = spriteElement.Attribute("filename").Value,
         Angle = int.Parse(spriteElement.Attribute("angle").Value),
@@ -58,63 +56,58 @@ public class GameObject(string name, Game game) : GameFile(name, game)
         Visible = bool.Parse((string)spriteElement.Attribute("visible") ?? "true"),
     };
 
-    //public Image GetCombinedTexture()
-    //{
-    //    List<SpriteReference> sprites = new List<SpriteReference>();
+    /// <summary>
+    /// Saves this <see cref="GameObject"/> as an XML file with the <c>.hs</c> extension to the loaded game's <c>ObjectsPath</c>.
+    /// </summary>
+    public void Save() => Export(this, Game.ObjectsPath);
 
-    //    foreach (SpriteReference sprRef in Sprites)
-    //    {
-    //        if (sprRef is null || sprRef.Sprite is null)
-    //            continue;
-    //        if (!sprRef.Visible)
-    //            continue;
+    /// <summary>
+    /// Saves this <see cref="GameObject"/> as an XML file with the <c>.hs</c> extension to a different directory.
+    /// </summary>
+    /// <param name="directory">Directory path to export the <see cref="GameObject"/> file to.</param>
+    public void Save(string directory) => Export(this, directory);
 
-    //        Sprite sprite = sprRef.Sprite;
+    /// <summary>
+    /// Exports the modified GameObject to the specified directory as a <c>.hs</c> file.
+    /// </summary>
+    /// <param name="directoryPath">Custom directory path to export InteractiveObject data to.</param>
+    public static void Export(GameObject obj, string directoryPath)
+    {
+        XDocument xml = new XDocument(
+            new XElement("InteractiveObject",
+                // Export InteractiveObject Shapes
+                obj.Shapes.Any() ? new XElement("Shapes",
+                    obj.Shapes.Select(shape =>
+                        new XElement("Shape", shape.Points.Select(p =>
+                            new XElement("Point", new XAttribute("pos", p.ToString())))
+                        )
+                    )
+                ) : null,
 
-    //        if (sprite.Animations.IsNullOrEmpty())
-    //            continue;
-    //        if (sprite.Animations[0].Frames.IsNullOrEmpty())
-    //            continue;
+                // Export InteractiveObject Sprites
+                obj.Sprites.Any() ? new XElement("Sprites",
+                    obj.Sprites.Select(spr => new XElement("Sprite",
+                        new XAttribute("filename", spr.Filename),
+                        new XAttribute("pos", spr.Position.ToString()),
+                        new XAttribute("angle", spr.Angle),
+                        new XAttribute("gridSize", spr.GridSize.ToString()),
+                        !spr.Visible ? new XAttribute("visible", spr.Visible) : null,
+                        spr.IsBackground ? new XAttribute("isBackground", spr.IsBackground) : null
+                    ))
+                ) : null,
 
-    //        Frame frame = sprite.Animations[0].Frames[0];
+                // Export InteractiveObject DefaultProperties
+                obj.DefaultProperties.Any() ? new XElement("DefaultProperties",
+                    obj.DefaultProperties.Select(p => new XElement("Property",
+                        new XAttribute("name", p.Key),
+                        new XAttribute("value", p.Value)
+                    ))
+                ) : null
+            )
+        );
 
-    //        if (frame is not null && frame.ImageRect is not null)
-    //            sprites.Add(sprRef);
-    //    }
-
-    //    if (sprites.Count == 0)
-    //        return null;
-
-    //    // Create canvas to combine all images
-    //    Image<Rgba32> canvas = new Image<Rgba32>(500, 500);
-
-    //    canvas.Mutate(ctx =>
-    //    {
-    //        foreach (SpriteReference sprite in sprites)
-    //        {
-    //            Frame frame = sprite.Sprite.Animations[0].Frames[0];
-    //            using Image frameImage = frame.ImageRect.GetCroppedImage();
-
-    //            Point size = frame.ImageRect.GetSize();
-    //            Vector2 gridSize = sprite.GetGridSize();
-    //            //size = new Point((int)(size.X * gridSize.X), (int)(size.Y * gridSize.Y));
-
-    //            Point offset = frame.ImageRect.GetOffset();
-    //            offset = new Point(offset.X + (int)sprite.GetPosition().X, offset.Y + (int)sprite.GetPosition().Y);  // funny
-    //            offset = new Point((int)(offset.X * gridSize.X), (int)(offset.Y * gridSize.Y));
-
-    //            // Calculate center position
-    //            int x = (canvas.Width - size.X) / 2 + offset.X;
-    //            int y = (canvas.Height - size.Y) / 2 + offset.Y;
-
-    //            // Apply rotation from 'angle'
-    //            if (sprite.Angle != 0)
-    //                frameImage.Mutate(frame => frame.Rotate(sprite.Angle));
-
-    //            ctx.DrawImage(frameImage, new Point(x, y), 1.0f);
-    //        }
-    //    });
-
-    //    return canvas.CropToContent();
-    //}
+        Directory.CreateDirectory(directoryPath);
+        string xmlPath = Path.Join(directoryPath, Path.ChangeExtension(obj.Name, ".hs"));
+        xml.Save(xmlPath);
+    }
 }
