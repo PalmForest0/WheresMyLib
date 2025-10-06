@@ -4,11 +4,11 @@ using WheresMyLib.Models.Types;
 namespace WheresMyLib.Models.Objects;
 
 /// <summary>
-/// Image data XML tag used in an <see cref="GameObject"/>.
+/// Adds a sprite from the <c>assets/Sprites</c> directory to this <see cref="GameObject"/> with additional data.
 /// </summary>
 public class ObjectSprite
 {
-    public string Filename { get; set; }
+    public string FileName { get; set; }
     public int Angle { get; set; }
     public Pos Position { get; set; }
     public Pos GridSize { get; set; }

@@ -3,7 +3,7 @@
 namespace WheresMyLib.Models.Objects;
 
 /// <summary>
-/// A shape of <see cref="ShapePoint"/>s used in a <see cref="ObjectSprite"/>.
+/// A shape that defines points used in a <see cref="ObjectSprite"/>.
 /// </summary>
 public class ObjectShape
 {

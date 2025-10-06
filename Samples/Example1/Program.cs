@@ -1,19 +1,28 @@
 ﻿using System.Diagnostics;
 using WheresMyLib.Core;
-using WheresMyLib.Models.Levels;
-using WheresMyLib.Models.Objects;
+using WheresMyLib.Models.Textures;
+using WheresMyLib.Utility;
 
 Stopwatch timer = Stopwatch.StartNew();
 Game game = new Game(@"C:\Water_ 1.18.9");
 
 timer.Stop();
-Print($"Successfully loaded game files in {timer.Elapsed.TotalSeconds:0.00} seconds0.\n\n", ConsoleColor.DarkGreen);
+Print($"Successfully loaded game files in {timer.Elapsed.TotalSeconds:0.00} seconds.\n\n", ConsoleColor.DarkGreen);
 
-GameObject obj = game.GetObject("cup_5blocks");
-obj.Save("Test");
+ConsoleTable.PrintTable(
+    game.Atlases,
+    new Column<ImageAtlas>("File Name", a => a.FileName, ConsoleColor.Cyan),
+    new Column<ImageAtlas>("Image Path", a => a.ImagePath, ConsoleColor.DarkGray),
+    new Column<ImageAtlas>("Loaded", a => a.Image is not null, ConsoleColor.Green)
+);
 
-Level level = game.GetLevel("bhvr_swirlie_bomb");
-level.Save(@"Test");
+
+
+//GameObject obj = game.GetObject("cup_5blocks");
+//obj.Save("Test");
+
+//Level level = game.GetLevel("bhvr_swirlie_bomb");
+//level.Save(@"Test");
 
 // Export Object textures
 //foreach (var obj in game.Objects)
@@ -24,14 +33,14 @@ level.Save(@"Test");
 //    Image texture = obj.GetCombinedTexture();
 //    if (texture is not null)
 //    {
-//        texture.Save(Path.Combine("Objects", Path.ChangeExtension($"{obj.FileInfo.Name}", ".png")));
+//        texture.Save(Path.Combine("Objects", Path.ChangeExtension($"{obj.FileInfo.FilePath}", ".png")));
 //        texture.Dispose();
 
-//        Print($"Successfully saved object texture '{Path.ChangeExtension($"{obj.FileInfo.Name}", ".png")}'.", ConsoleColor.DarkGreen);
+//        Print($"Successfully saved object texture '{Path.ChangeExtension($"{obj.FileInfo.FilePath}", ".png")}'.", ConsoleColor.DarkGreen);
 //    }
 //    else
 //    {
-//        Print($"Failed to save object texture '{Path.ChangeExtension($"{obj.FileInfo.Name}", ".png")}'.", ConsoleColor.Red);
+//        Print($"Failed to save object texture '{Path.ChangeExtension($"{obj.FileInfo.FilePath}", ".png")}'.", ConsoleColor.Red);
 //    }
 //}
 
@@ -42,7 +51,7 @@ level.Save(@"Test");
 //    {
 //        Print($"Texture: {texture.ImagePath} ({texture.Rects.Count} images)", ConsoleColor.Cyan);
 //        foreach (var image in texture.Rects)
-//            Print($" - Image: {image.Name} Rect: {image.Rect}", ConsoleColor.DarkCyan);
+//            Print($" - Image: {image.FilePath} Rect: {image.Rect}", ConsoleColor.DarkCyan);
 //    }
 //}
 
@@ -52,7 +61,5 @@ void Print(object content, ConsoleColor foregroundColor = ConsoleColor.White, Co
     Console.BackgroundColor = backgroundColor;
 
     Console.WriteLine(content);
-
-    Console.ForegroundColor = ConsoleColor.White;
-    Console.BackgroundColor = ConsoleColor.Black;
+    Console.ResetColor();
 }

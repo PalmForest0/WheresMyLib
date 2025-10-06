@@ -46,4 +46,22 @@ public static class FileUtils
         // If empty at the end, then we are sad :c
         return string.IsNullOrWhiteSpace(result) ? "untitled" : result;
     }
+
+    /// <summary>
+    /// Combines a base absolute path with another path that may start with '/' or '\'.
+    /// </summary>
+    public static string CombinePaths(string basePath, string pathToAdd)
+    {
+        if (string.IsNullOrWhiteSpace(basePath))
+            throw new ArgumentException("Base path cannot be null or empty.", nameof(basePath));
+
+        if (string.IsNullOrWhiteSpace(pathToAdd))
+            return basePath;
+
+        // Make path to add relative
+        string relative = pathToAdd.TrimStart('/', '\\');
+        string combined = Path.Combine(basePath, relative);
+
+        return Path.GetFullPath(combined);
+    }
 }

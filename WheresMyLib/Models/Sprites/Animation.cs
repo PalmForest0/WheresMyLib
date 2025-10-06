@@ -28,5 +28,5 @@ public class Animation
     public List<Frame> Frames { get; set; }
     
     [XmlIgnore]
-    public TextureAtlas Atlas { get; set; }
+    public ImageAtlas Atlas { get; set; }
 }

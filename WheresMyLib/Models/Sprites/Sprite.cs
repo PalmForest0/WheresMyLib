@@ -18,7 +18,7 @@ public class Sprite : RootModel
         foreach (Animation animation in sprite.Animations)
         {
             FileInfo atlasFile = new FileInfo(Path.Join(game.AssetsPath, animation.AtlasPath));
-            TextureAtlas atlas = game.Atlases.Find(a => a.FileInfo.FullName == atlasFile.FullName);
+            ImageAtlas atlas = game.Atlases.Find(a => a.FilePath == atlasFile.FullName);
 
             // Load the texture atlas of each animation and
             // link the frames to the atlas images

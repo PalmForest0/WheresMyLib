@@ -11,11 +11,11 @@ Game game = new Game(@"C:\Water_ 1.18.9");
 int totalTests = 0;
 int passedTests = 0;
 
-if(DoListCheck(game.TextureAtlases, $"{nameof(TextureAtlas)} loading"))
+if(DoListCheck(game.TextureAtlases, $"{nameof(ImageAtlas)} loading"))
 {
-    DoStringCheck(game.TextureAtlases[0].ImagePath, $"{nameof(TextureAtlas.ImagePath)}", 1);
-    DoStringCheck(game.TextureAtlases[0].ImageSize, $"{nameof(TextureAtlas.ImageSize)}", 1);
-    DoListCheck(game.TextureAtlases[0].Rects, $"{nameof(TextureAtlas.Rects)}", 1);
+    DoStringCheck(game.TextureAtlases[0].ImagePath, $"{nameof(ImageAtlas.ImagePath)}", 1);
+    DoStringCheck(game.TextureAtlases[0].ImageSize, $"{nameof(ImageAtlas.ImageSize)}", 1);
+    DoListCheck(game.TextureAtlases[0].Rects, $"{nameof(ImageAtlas.Rects)}", 1);
 }
 
 

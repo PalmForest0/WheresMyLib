@@ -2,7 +2,7 @@
 
 namespace WheresMyLib.Models.Types;
 
-public struct Rect
+public class Rect
 {
     public float X { get; set; }
     public float Y { get; set; }

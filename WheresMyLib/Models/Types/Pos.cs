@@ -3,7 +3,7 @@ using System.Xml.Linq;
 
 namespace WheresMyLib.Models.Types;
 
-public struct Pos
+public class Pos
 {
     public float X { get; set; }
     public float Y { get; set; }
@@ -15,6 +15,9 @@ public struct Pos
     /// </summary>
     public static Pos FromString(string str)
     {
+        if (str is null)
+            return null;
+
         string[] parts = str.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
         if (parts.Length != 2)
@@ -31,7 +34,10 @@ public struct Pos
 
     public static Pos FromAbsoluteLocation(XElement xmlElement)
     {
-        if (xmlElement is null || xmlElement.Name != "AbsoluteLocation" || !xmlElement.HasAttributes)
+        if (xmlElement is null)
+            return null;
+
+        if (xmlElement.Name != "AbsoluteLocation" || !xmlElement.HasAttributes)
             throw new InvalidOperationException($"Invalid AbsolutePosition XML element: \"{xmlElement}\".");
 
         return FromString(xmlElement.Attribute("value").Value);

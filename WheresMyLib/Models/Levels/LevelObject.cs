@@ -1,9 +1,10 @@
-﻿using WheresMyLib.Models.Types;
+﻿using WheresMyLib.Models.Objects;
+using WheresMyLib.Models.Types;
 
 namespace WheresMyLib.Models.Levels;
 
 /// <summary>
-/// An Object instance placed in a <see cref="Level"/>.
+/// An instance of a <see cref="GameObject"/> placed in a <see cref="Level"/>.
 /// </summary>
 public class LevelObject
 {
