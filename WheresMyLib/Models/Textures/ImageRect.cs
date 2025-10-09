@@ -26,7 +26,7 @@ public class ImageRect
         if (image is null)
             return new Image<Rgba32>(1, 1);
 
-        Image croppedImage = image.Clone(ctx => ctx.Crop((int)Rect.Width, (int)Rect.Height));
+        Image croppedImage = image.Clone(ctx => ctx.Crop((Rectangle)Rect));
         return croppedImage;
     }
 }

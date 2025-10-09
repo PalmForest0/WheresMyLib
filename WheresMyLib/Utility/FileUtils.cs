@@ -7,18 +7,23 @@ public static class FileUtils
     public static IEnumerable<FileInfo> GetFiles(string directoryPath, Func<FileInfo, bool> filter)
         => new DirectoryInfo(directoryPath).EnumerateFiles().Where(filter);
 
-    public static void ValidateDirectory(string path)
+    public static void ValidateGameFiles(string gamePath)
     {
-        if (!Directory.Exists(path))
-            throw new InvalidGameFilesException(path);
+        if (!Directory.Exists(gamePath))
+            throw new InvalidGameFilesException(gamePath);
     }
 
     public static bool MatchPath(string fullPath, string filter)
     {
-        string normPath = Path.GetFullPath(fullPath).Replace('/', '\\');
-        string normFilter = filter.Replace('/', '\\');
+        if (string.IsNullOrEmpty(fullPath) || string.IsNullOrEmpty(filter))
+            return false;
+
+        string normPath = fullPath.Replace('\\', '/').TrimEnd('/');
+        string normFilter = filter.Replace('\\', '/').TrimEnd('/');
+
         return normPath.IndexOf(normFilter, StringComparison.OrdinalIgnoreCase) >= 0;
     }
+
 
     public static string SanitiseFileName(string input, string replacement = "_")
     {
@@ -48,7 +53,7 @@ public static class FileUtils
     }
 
     /// <summary>
-    /// Combines a base absolute path with another path that may start with '/' or '\'.
+    /// Combines a base absolute gamePath with another gamePath that may start with '/' or '\'.
     /// </summary>
     public static string CombinePaths(string basePath, string pathToAdd)
     {
@@ -58,7 +63,7 @@ public static class FileUtils
         if (string.IsNullOrWhiteSpace(pathToAdd))
             return basePath;
 
-        // Make path to add relative
+        // Make gamePath to add relative
         string relative = pathToAdd.TrimStart('/', '\\');
         string combined = Path.Combine(basePath, relative);
 

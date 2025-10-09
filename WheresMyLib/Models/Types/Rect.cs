@@ -57,4 +57,10 @@ public class Rect
 
     public override bool Equals(object obj) => obj is Rect r && r == this;
     public override int GetHashCode() => HashCode.Combine(X, Y, Width, Height);
+
+    public static explicit operator System.Drawing.Rectangle(Rect rect)
+        => new System.Drawing.Rectangle((int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height);
+
+    public static explicit operator SixLabors.ImageSharp.Rectangle(Rect rect)
+        => new SixLabors.ImageSharp.Rectangle((int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height);
 }

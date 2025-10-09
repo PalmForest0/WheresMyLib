@@ -13,6 +13,5 @@ public static class XmlUtils
     public static IEnumerable<XElement> ExportProperties(Dictionary<string, string> properties)
         => properties.Select(p => new XElement("Property", new XAttribute("name", p.Key), new XAttribute("value", p.Value)));
 
-    public static string GetValueOrFallback(XAttribute attribute, string fallback)
-        => attribute is null ? fallback : attribute.Value;
+    public static XAttribute OptionalAttribute(string name, object value) => value is null ? null : new XAttribute(name, value);
 }

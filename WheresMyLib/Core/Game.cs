@@ -1,4 +1,5 @@
-﻿using WheresMyLib.Models.Levels;
+﻿using WheresMyLib.Models;
+using WheresMyLib.Models.Levels;
 using WheresMyLib.Models.Objects;
 using WheresMyLib.Models.Sprites;
 using WheresMyLib.Models.Textures;
@@ -17,84 +18,53 @@ public class Game
 
     public List<Level> Levels { get; private set; }
     public List<GameObject> Objects { get; private set; }
-    public List<ImageAtlas> Atlases { get; private set; }
+    public List<ImageAtlas> Textures { get; private set; }
     public List<Sprite> Sprites { get; private set; }
 
-    public Game(string gamePath)
+    private Game() { }
+
+    public static Game Load(string rootPath)
     {
-        GamePath = gamePath;
-        AssetsPath = Path.Combine(gamePath, "assets");
-        FileUtils.ValidateDirectory(AssetsPath);
+        FileUtils.ValidateGameFiles(rootPath);
 
-        TexturesPath = Path.Combine(AssetsPath, "Textures");
-        Atlases = LoadAllAtlases(TexturesPath, this);
+        // TODO: add options for spinoff games
+        string assetsPath = Path.Combine(rootPath, "assets");
 
-        SpritesPath = Path.Combine(AssetsPath, "Sprites");
-        Sprites = LoadAllSprites(SpritesPath, this);
+        var game = new Game()
+        {
+            GamePath = rootPath,
+            AssetsPath = assetsPath,
 
-        ObjectsPath = Path.Combine(AssetsPath, "Objects");
-        Objects = LoadAllObjects(ObjectsPath, this);
+            TexturesPath = Path.Combine(assetsPath, "Textures"),
+            SpritesPath = Path.Combine(assetsPath, "Sprites"),
+            ObjectsPath = Path.Combine(assetsPath, "Objects"),
+            LevelsPath = Path.Combine(assetsPath, "Levels")
+        };
 
-        LevelsPath = Path.Combine(AssetsPath, "Levels");
-        Levels = LoadAllLevels(LevelsPath, this);
+        game.Textures = LoadGameFiles<ImageAtlas>(game.TexturesPath, game, file => file.Extension == ".imagelist");
+        game.Sprites = LoadGameFiles<Sprite>(game.SpritesPath, game, file => file.Extension == ".sprite");
+        game.Objects = LoadGameFiles<GameObject>(game.ObjectsPath, game, file => file.Extension == ".hs");
+        game.Levels = LoadGameFiles<Level>(game.LevelsPath, game, file => file.Extension == ".xml");
+
+        return game;
     }
 
-    public Level GetLevel(string name) => Levels.Find(l => l.FilePath.Contains(name, StringComparison.OrdinalIgnoreCase));
+    private T GetGameFileByName<T>(IEnumerable<T> gameFiles, string name) where T : GameFile
+        => gameFiles.FirstOrDefault(f => FileUtils.MatchPath(f.FilePath, name));
+
+    private static List<T> LoadGameFiles<T>(string directory, Game game, Func<FileInfo, bool> filter) where T : GameFile, IGameFileLoader<T>
+        => FileUtils.GetFiles(directory, filter).Select(file => T.Load(file.FullName, game)).ToList();
+
+
+    public Level GetLevel(string name) => GetGameFileByName(Levels, name);
     public Level GetLevel(Func<Level, bool> filter) => Levels.First(filter);
-    public IEnumerable<Level> GetLevels(Func<Level, bool> filter) => Levels.Where(filter);
 
-    public GameObject GetObject(string name) => Objects.Find(o => o.FilePath.Contains(name, StringComparison.OrdinalIgnoreCase));
-    public GameObject GetLevel(Func<GameObject, bool> filter) => Objects.First(filter);
-    public IEnumerable<GameObject> GetLevels(Func<GameObject, bool> filter) => Objects.Where(filter);
+    public GameObject GetObject(string name) => GetGameFileByName(Objects, name);
+    public GameObject GetObject(Func<GameObject, bool> filter) => Objects.First(filter);
 
-    private static List<GameObject> LoadAllObjects(string objectsPath, Game game)
-    {
-        FileUtils.ValidateDirectory(objectsPath);
-        List<GameObject> objects = new List<GameObject>();
+    public ImageAtlas GetTexture(string name) => GetGameFileByName(Textures, name);
+    public ImageAtlas GetTexture(Func<ImageAtlas, bool> filter) => Textures.First(filter);
 
-        foreach (var file in FileUtils.GetFiles(objectsPath, f => f.Extension == ".hs"))
-            objects.Add(GameObject.Load(file.FullName, game));
-
-        return objects;
-    }
-
-    public static List<Level> LoadAllLevels(string levelsPath, Game game)
-    {
-        FileUtils.ValidateDirectory(levelsPath);
-        List<Level> levels = new List<Level>();
-
-        foreach (var file in FileUtils.GetFiles(levelsPath, f => f.Extension == ".xml"))
-            levels.Add(Level.Load(file.FullName, game));
-
-        return levels;
-    }
-
-    public static List<ImageAtlas> LoadAllAtlases(string atlasesPath, Game game)
-    {
-        FileUtils.ValidateDirectory(atlasesPath);
-        List<ImageAtlas> atlases = new List<ImageAtlas>();
-
-        foreach (var file in FileUtils.GetFiles(atlasesPath, f => f.Extension == ".imagelist"))
-            atlases.Add(ImageAtlas.Load(file.FullName, game));
-
-        return atlases;
-    }
-
-    public static List<Sprite> LoadAllSprites(string spritesPath, Game game)
-    {
-        FileUtils.ValidateDirectory(spritesPath);
-        List<Sprite> sprites = new List<Sprite>();
-
-        foreach (var file in FileUtils.GetFiles(spritesPath, f => f.Extension == ".sprite"))
-            sprites.Add(Sprite.Load(file.FullName, game));
-
-        return sprites;
-    }
-
-    //private static bool IsMatchingModel(RootModel model, string filter) => model.FileInfo.FullName.ToLower().Contains(filter.ToLower().Replace("/", "\\"));
-
-    //public InteractiveObject GetObject(string name) => Objects.Find(obj => IsMatchingModel(obj, name));
-    //public Level GetLevel(string name) => Levels.Find(level => FileUtils.MatchPath(level.FilePath, name));
-    //public ImageAtlas GetTexture(string name) => TextureAtlases.Find(texture => IsMatchingModel(texture, name));
-    //public Sprite GetSprite(string name) => Sprites.Find(sprite => IsMatchingModel(sprite, name));
+    public Sprite GetSprite(string name) => GetGameFileByName(Sprites, name);
+    public Sprite GetSprite(Func<Sprite, bool> filter) => Sprites.First(filter);
 }

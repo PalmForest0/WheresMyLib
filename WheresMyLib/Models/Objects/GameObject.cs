@@ -53,7 +53,7 @@ public class GameObject(string filePath, Game game) : GameFile(filePath, game), 
             Visible = bool.Parse((string)spriteElement.Attribute("visible") ?? "true"),
         };
 
-        spr.Animations = game.Sprites.Find(s => FileUtils.MatchPath(s.FileInfo.FullName, spr.FileName))?.Animations;
+        spr.Animations = game.GetSprite(spr.FileName)?.Animations;
         return spr;
     }
 
@@ -66,13 +66,13 @@ public class GameObject(string filePath, Game game) : GameFile(filePath, game), 
     /// <summary>
     /// Saves this <see cref="GameObject"/> as an XML file with the <c>.hs</c> extension to a different directoryPath.
     /// </summary>
-    /// <param filePath="directoryPath">Directory path to export the <see cref="GameObject"/> file to.</param>
+    /// <param name="directoryPath">Directory path to export the <c>.hs</c> file to.</param>
     public void Save(string directoryPath) => Export(this, directoryPath);
 
     /// <summary>
     /// Exports the modified GameObject to the specified directoryPath as a <c>.hs</c> file.
     /// </summary>
-    /// <param filePath="directoryPath">Custom directoryPath path to export InteractiveObject data to.</param>
+    /// <param name="directoryPath">Custom directoryPath path to export InteractiveObject data to.</param>
     public static void Export(GameObject obj, string directoryPath)
     {
         XDocument xml = new XDocument(

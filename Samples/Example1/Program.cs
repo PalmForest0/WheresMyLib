@@ -1,20 +1,43 @@
 ﻿using System.Diagnostics;
 using WheresMyLib.Core;
-using WheresMyLib.Models.Textures;
-using WheresMyLib.Utility;
+using WheresMyLib.Models.Sprites;
 
 Stopwatch timer = Stopwatch.StartNew();
-Game game = new Game(@"C:\Water_ 1.18.9");
+Game game = Game.Load(@"C:\Water_ 1.18.9");
 
 timer.Stop();
 Print($"Successfully loaded game files in {timer.Elapsed.TotalSeconds:0.00} seconds.\n\n", ConsoleColor.DarkGreen);
 
-ConsoleTable.PrintTable(
-    game.Atlases,
-    new Column<ImageAtlas>("File Name", a => a.FileName, ConsoleColor.Cyan),
-    new Column<ImageAtlas>("Image Path", a => a.ImagePath, ConsoleColor.DarkGray),
-    new Column<ImageAtlas>("Loaded", a => a.Image is not null, ConsoleColor.Green)
-);
+Sprite spr = game.GetSprite("spout.sp");
+spr.Save("Test");
+
+//int pingpong = 0;
+//int loop = 0;
+
+//foreach (Sprite sprite in game.Sprites)
+//{
+//    foreach (var anim in sprite.Animations)
+//    {
+//        Print(anim.Fps);
+//        //Print($"{anim.PlaybackMode}:\t\t{sprite.FileName} - {anim.Name}", anim.PlaybackMode != "ONCE" ? ConsoleColor.DarkYellow : ConsoleColor.Gray);
+
+//        if (anim.PlaybackMode == "LOOP")
+//            loop++;
+//        else if (anim.PlaybackMode == "PINGPONG")
+//            pingpong++;
+//    }
+//}
+
+//Print("\nTotal LOOP count: " + loop, ConsoleColor.DarkGreen);
+//Print("\nTotal PINGPONG count: " + pingpong, ConsoleColor.DarkGreen);
+
+
+//ConsoleTable.PrintTable(
+//    game.Textures,
+//    new Column<ImageAtlas>("File Name", a => a.FileName, ConsoleColor.Cyan),
+//    new Column<ImageAtlas>("Image Path", a => a.ImagePath, ConsoleColor.DarkGray),
+//    new Column<ImageAtlas>("Loaded", a => a.Image is not null, ConsoleColor.Green)
+//);
 
 
 

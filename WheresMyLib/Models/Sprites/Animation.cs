@@ -1,32 +1,21 @@
-using System.Xml.Serialization;
 using WheresMyLib.Models.Textures;
 
 namespace WheresMyLib.Models.Sprites;
 
-[XmlRoot(ElementName = "Animation")]
 public class Animation
 {
-    [XmlAttribute(AttributeName = "name")]
     public string Name { get; set; }
-    
-    [XmlAttribute(AttributeName = "textureBasePath")]
-    public string TextureBasePath { get; set; }
-    
-    [XmlAttribute(AttributeName = "atlas")]
-    public string AtlasPath { get; set; }
-    
-    [XmlAttribute(AttributeName = "fps")]
-    public float FrameRate { get; set; }
-    
-    [XmlAttribute(AttributeName = "playbackMode")]
+    public float Fps { get; set; }
     public string PlaybackMode { get; set; }
-    
-    [XmlAttribute(AttributeName = "loopCount")]
     public int LoopCount { get; set; }
-    
-    [XmlElement(ElementName = "Frame")]
-    public List<Frame> Frames { get; set; }
-    
-    [XmlIgnore]
+
+    public string AtlasPath { get; set; }
     public ImageAtlas Atlas { get; set; }
+
+    /// <summary>
+    /// Contains the root path of all texture images. Always equal to <c>"/Textures/"</c>.
+    /// </summary>
+    public string TextureBasePath { get; } = "/Textures/";
+
+    public List<Frame> Frames { get; set; }
 }

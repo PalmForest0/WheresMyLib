@@ -1,20 +1,18 @@
-using System.Xml.Serialization;
 using WheresMyLib.Models.Textures;
+using WheresMyLib.Models.Types;
 
 namespace WheresMyLib.Models.Sprites;
 
-[XmlRoot(ElementName = "Frame")]
+/// <summary>
+/// A frame that is part of an <see cref="Animation"/>, specifying an image found in an <see cref="ImageAtlas"/>
+/// </summary>
 public class Frame
 {
-    [XmlAttribute(AttributeName = "name")]
-    public string Name { get; set; }
+    public string ImageName { get; set; }
+    public ImageRect AtlasRect { get; set; }
 
-    //[XmlAttribute(AttributeName = "offset")]
-    //public string Offset { get; set; }
-
-    [XmlAttribute(AttributeName = "repeat")]
-    public int Repeat { get; set; } = 0;
-
-    [XmlIgnore]
-    public ImageRect ImageRect { get; set; }
+    public Pos Offset { get; set; }
+    public Pos Scale { get; set; }
+    public float Angle { get; set; }
+    public int Repeat { get; set; }
 }

@@ -68,13 +68,13 @@ public class Level(string filePath, Game game) : GameFile(filePath, game), IGame
     /// <summary>
     /// Saves this <see cref="Level"/> as an <c>XML</c> file and a <c>PNG</c> image with a matching filePath to a different directoryPath.
     /// </summary>
-    /// <param filePath="directoryPath">Directory path to export the <see cref="Level"/> data and image to.</param>
+    /// <param name="directoryPath">Directory path to export the <see cref="Level"/> data and image to.</param>
     public void Save(string directoryPath) => Export(this, directoryPath);
 
     /// <summary>
     /// Exports this <see cref="Level"/>'s XML data and PNG image to a custom directoryPath.
     /// </summary>
-    /// <param filePath="directoryPath">Custom directoryPath path to export level data and image to.</param>
+    /// <param name="directoryPath">Custom directoryPath path to export level data and image to.</param>
     public static void Export(Level level, string directoryPath)
     {
         XDocument xml = new XDocument(
