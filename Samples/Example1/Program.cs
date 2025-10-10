@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using WheresMyLib.Core;
-using WheresMyLib.Models.Sprites;
 
 Stopwatch timer = Stopwatch.StartNew();
 Game game = Game.Load(@"C:\Water_ 1.18.9");
@@ -8,8 +7,11 @@ Game game = Game.Load(@"C:\Water_ 1.18.9");
 timer.Stop();
 Print($"Successfully loaded game files in {timer.Elapsed.TotalSeconds:0.00} seconds.\n\n", ConsoleColor.DarkGreen);
 
-Sprite spr = game.GetSprite("/spout.sprite");
-spr.Save("Test");
+foreach (var atlas in game.Textures)
+    Print(atlas.Quality + "\t| " + atlas.FilePath, ConsoleColor.DarkGreen);
+
+//Sprite spr = game.GetSprite("/spout.sprite");
+//spr.Save("Test");
 
 //int pingpong = 0;
 //int loop = 0;

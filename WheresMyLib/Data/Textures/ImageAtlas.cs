@@ -1,10 +1,10 @@
 ﻿using SixLabors.ImageSharp;
 using System.Xml.Linq;
 using WheresMyLib.Core;
-using WheresMyLib.Models.Types;
+using WheresMyLib.Data.Types;
 using WheresMyLib.Utility;
 
-namespace WheresMyLib.Models.Textures;
+namespace WheresMyLib.Data.Textures;
 
 /// <summary>
 /// Provides a list of <see cref="ImageRect"/>s from a single <c>.imagelist</c> file. Example:
@@ -28,6 +28,7 @@ public class ImageAtlas(string filePath, Game game) : GameFile(filePath, game), 
     /// </summary>
     public string TextureBasePath { get; } = "/Textures";
 
+    public TextureQuality Quality { get; set; }
 
     public static ImageAtlas Load(string filePath, Game game)
     {
@@ -54,6 +55,13 @@ public class ImageAtlas(string filePath, Game game) : GameFile(filePath, game), 
             DrawScale = drawScale,
             Image = image
         };
+
+        // Determine texture quality based of filename
+        if (atlas.FileName.EndsWith("TabHD"))
+            atlas.Quality = TextureQuality.TabHD;
+        else if (atlas.FileName.EndsWith("HD"))
+            atlas.Quality = TextureQuality.HD;
+        else atlas.Quality = TextureQuality.Normal;
 
         // Load each <Image> tag from ImageList
         List<ImageRect> rects = xml.Root.Elements("Image").Select(img => ParseRect(img, atlas)).ToList();

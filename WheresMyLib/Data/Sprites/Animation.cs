@@ -1,6 +1,6 @@
-using WheresMyLib.Models.Textures;
+using WheresMyLib.Data.Textures;
 
-namespace WheresMyLib.Models.Sprites;
+namespace WheresMyLib.Data.Sprites;
 
 public class Animation
 {

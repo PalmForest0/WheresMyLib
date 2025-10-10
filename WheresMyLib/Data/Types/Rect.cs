@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace WheresMyLib.Models.Types;
+namespace WheresMyLib.Data.Types;
 
 public class Rect
 {

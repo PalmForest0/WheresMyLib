@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Xml.Linq;
 
-namespace WheresMyLib.Models.Types;
+namespace WheresMyLib.Data.Types;
 
 public class Pos
 {

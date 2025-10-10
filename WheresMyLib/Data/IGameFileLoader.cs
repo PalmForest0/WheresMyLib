@@ -1,6 +1,6 @@
 ﻿using WheresMyLib.Core;
 
-namespace WheresMyLib.Models;
+namespace WheresMyLib.Data;
 
 public interface IGameFileLoader<T> where T : GameFile
 {

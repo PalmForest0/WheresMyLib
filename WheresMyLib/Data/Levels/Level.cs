@@ -1,10 +1,10 @@
 using SixLabors.ImageSharp;
 using System.Xml.Linq;
 using WheresMyLib.Core;
-using WheresMyLib.Models.Types;
+using WheresMyLib.Data.Types;
 using WheresMyLib.Utility;
 
-namespace WheresMyLib.Models.Levels;
+namespace WheresMyLib.Data.Levels;
 
 /// <summary>
 /// A level found in the game files at <c>assets/Levels</c>

@@ -1,9 +1,9 @@
 using System.Xml.Linq;
 using WheresMyLib.Core;
-using WheresMyLib.Models.Types;
+using WheresMyLib.Data.Types;
 using WheresMyLib.Utility;
 
-namespace WheresMyLib.Models.Objects;
+namespace WheresMyLib.Data.Objects;
 
 /// <summary>
 /// Object template found in the game files at <c>assets/Objects/</c>.

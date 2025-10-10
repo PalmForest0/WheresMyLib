@@ -1,7 +1,7 @@
-﻿using WheresMyLib.Models.Objects;
-using WheresMyLib.Models.Types;
+﻿using WheresMyLib.Data.Objects;
+using WheresMyLib.Data.Types;
 
-namespace WheresMyLib.Models.Levels;
+namespace WheresMyLib.Data.Levels;
 
 /// <summary>
 /// An instance of a <see cref="GameObject"/> placed in a <see cref="Level"/>.

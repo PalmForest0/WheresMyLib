@@ -1,9 +1,9 @@
 ﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using WheresMyLib.Models.Types;
+using WheresMyLib.Data.Types;
 
-namespace WheresMyLib.Models.Textures;
+namespace WheresMyLib.Data.Textures;
 
 /// <summary>
 /// Specifies the rectangle of a texture that corresponds to an image. Example:

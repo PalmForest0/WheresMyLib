@@ -1,6 +1,6 @@
-﻿using WheresMyLib.Models.Types;
+﻿using WheresMyLib.Data.Types;
 
-namespace WheresMyLib.Models.Objects;
+namespace WheresMyLib.Data.Objects;
 
 /// <summary>
 /// A shape that defines points used in a <see cref="ObjectSprite"/>.

@@ -1,11 +1,11 @@
 using SixLabors.ImageSharp;
 using System.Xml.Linq;
 using WheresMyLib.Core;
-using WheresMyLib.Models.Textures;
-using WheresMyLib.Models.Types;
+using WheresMyLib.Data.Textures;
+using WheresMyLib.Data.Types;
 using WheresMyLib.Utility;
 
-namespace WheresMyLib.Models.Sprites;
+namespace WheresMyLib.Data.Sprites;
 
 public class Sprite(string filePath, Game game) : GameFile(filePath, game), IGameFileLoader<Sprite>
 {

@@ -1,6 +1,6 @@
-using WheresMyLib.Models.Types;
+using WheresMyLib.Data.Types;
 
-namespace WheresMyLib.Models.Levels;
+namespace WheresMyLib.Data.Levels;
 
 /// <summary>
 /// An object that represents the goal room of a <see cref="Level"/>.

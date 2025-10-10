@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 using WheresMyLib.Core;
-using WheresMyLib.Models.Levels;
-using WheresMyLib.Models.Objects;
-using WheresMyLib.Models.Sprites;
-using WheresMyLib.Models.Textures;
+using WheresMyLib.Data.Levels;
+using WheresMyLib.Data.Objects;
+using WheresMyLib.Data.Sprites;
+using WheresMyLib.Data.Textures;
 
 Stopwatch timer = Stopwatch.StartNew();
 Game game = new Game(@"C:\Water_ 1.18.9");

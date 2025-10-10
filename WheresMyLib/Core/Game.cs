@@ -1,8 +1,8 @@
-﻿using WheresMyLib.Models;
-using WheresMyLib.Models.Levels;
-using WheresMyLib.Models.Objects;
-using WheresMyLib.Models.Sprites;
-using WheresMyLib.Models.Textures;
+﻿using WheresMyLib.Data;
+using WheresMyLib.Data.Levels;
+using WheresMyLib.Data.Objects;
+using WheresMyLib.Data.Sprites;
+using WheresMyLib.Data.Textures;
 using WheresMyLib.Utility;
 
 namespace WheresMyLib.Core;

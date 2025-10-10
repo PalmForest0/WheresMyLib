@@ -1,7 +1,7 @@
-using WheresMyLib.Models.Textures;
-using WheresMyLib.Models.Types;
+using WheresMyLib.Data.Textures;
+using WheresMyLib.Data.Types;
 
-namespace WheresMyLib.Models.Sprites;
+namespace WheresMyLib.Data.Sprites;
 
 /// <summary>
 /// A frame that is part of an <see cref="Animation"/>, specifying an image found in an <see cref="ImageAtlas"/>

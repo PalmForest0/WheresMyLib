@@ -1,7 +1,7 @@
-﻿using WheresMyLib.Models.Sprites;
-using WheresMyLib.Models.Types;
+﻿using WheresMyLib.Data.Sprites;
+using WheresMyLib.Data.Types;
 
-namespace WheresMyLib.Models.Objects;
+namespace WheresMyLib.Data.Objects;
 
 /// <summary>
 /// Adds a sprite from the <c>assets/Sprites</c> directory to this <see cref="GameObject"/> with additional data.
