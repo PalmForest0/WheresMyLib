@@ -99,7 +99,7 @@ public class Level(string filePath, Game game) : GameFile(filePath, game), IGame
 
         Directory.CreateDirectory(directoryPath);
         string xmlPath = Path.Join(directoryPath, $"{level.FileName}.xml");
-        xml.Save(xmlPath);
+        XmlUtils.SaveXml(xml, xmlPath);
 
         // Save the image if it exists (some hidden levels in the files don't)
         if (level.Image is not null)

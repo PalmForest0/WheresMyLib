@@ -8,7 +8,7 @@ Game game = Game.Load(@"C:\Water_ 1.18.9");
 timer.Stop();
 Print($"Successfully loaded game files in {timer.Elapsed.TotalSeconds:0.00} seconds.\n\n", ConsoleColor.DarkGreen);
 
-Sprite spr = game.GetSprite("spout.sp");
+Sprite spr = game.GetSprite("/spout.sprite");
 spr.Save("Test");
 
 //int pingpong = 0;

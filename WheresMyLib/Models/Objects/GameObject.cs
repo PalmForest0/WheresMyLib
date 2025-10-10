@@ -110,6 +110,6 @@ public class GameObject(string filePath, Game game) : GameFile(filePath, game), 
 
         Directory.CreateDirectory(directoryPath);
         string xmlPath = Path.Join(directoryPath, $"{obj.FileName}.hs");
-        xml.Save(xmlPath);
+        XmlUtils.SaveXml(xml, xmlPath);
     }
 }

@@ -97,6 +97,6 @@ public class Sprite(string filePath, Game game) : GameFile(filePath, game), IGam
 
         Directory.CreateDirectory(directoryPath);
         string xmlPath = Path.Join(directoryPath, $"{sprite.FileName}.sprite");
-        xml.Save(xmlPath);
+        XmlUtils.SaveXml(xml, xmlPath);
     }
 }

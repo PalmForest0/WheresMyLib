@@ -105,7 +105,7 @@ public class ImageAtlas(string filePath, Game game) : GameFile(filePath, game), 
 
         Directory.CreateDirectory(directoryPath);
         string xmlPath = Path.Join(directoryPath, $"{atlas.FileName}.imagelist");
-        xml.Save(xmlPath);
+        XmlUtils.SaveXml(xml, xmlPath);
 
         // Save the image if it exists (should never be null)
         if (atlas.Image is not null)
