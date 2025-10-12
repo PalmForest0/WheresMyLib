@@ -1,8 +1,6 @@
 using SixLabors.ImageSharp;
 using System.Xml.Linq;
 using WheresMyLib.Core;
-using WheresMyLib.Data.Textures;
-using WheresMyLib.Data.Types;
 using WheresMyLib.Utility;
 
 namespace WheresMyLib.Data.Sprites;
@@ -17,42 +15,7 @@ public class Sprite(string filePath, Game game) : GameFile(filePath, game), IGam
 
         return new Sprite(filePath, game)
         {
-            Animations = xml.Root.Elements("Animation").Select(anim => LoadAnimation(anim, game)).ToList()
-        };
-    }
-
-    private static Animation LoadAnimation(XElement elem, Game game)
-    {
-        var anim = new Animation()
-        {
-            Name = (string)elem.Attribute("name"),
-            AtlasPath = (string)elem.Attribute("atlas"),
-            Fps = float.Parse((string)elem.Attribute("fps")),
-            LoopCount = int.Parse((string)elem.Attribute("loopCount")),
-            PlaybackMode = (string)elem.Attribute("playbackMode")
-        };
-
-        anim.Atlas = game.GetTexture(anim.AtlasPath);
-
-        // Create lookup dictionary of atlas rects for fast searching in LoadFrame() calls
-        Dictionary<string, ImageRect> rectLookup = anim.Atlas is null ? null : anim.Atlas.Rects.ToDictionary(r => r.Name, r => r);
-        anim.Frames = elem.Elements("Frame").Select(frame => LoadFrame(frame, rectLookup, game)).ToList();
-
-        return anim;
-    }
-
-    private static Frame LoadFrame(XElement elem, Dictionary<string, ImageRect> rectLookup, Game game)
-    {
-        string imageName = elem.Attribute("name").Value;
-
-        return new Frame()
-        {
-            ImageName = imageName,
-            Offset = Pos.FromString((string)elem.Attribute("offset")),
-            Scale = Pos.FromString((string)elem.Attribute("scale")),
-            Angle = float.TryParse((string)elem.Attribute("angleDeg"), out float angle) ? angle : 0,
-            Repeat = int.TryParse((string)elem.Attribute("repeat"), out int repeat) ? repeat : 0,
-            AtlasRect = rectLookup is null ? null : rectLookup.TryGetValue(imageName, out ImageRect rect) ? rect : null
+            Animations = xml.Root.Elements("Animation").Select(anim => Animation.ParseAnimation(anim, game)).ToList()
         };
     }
 

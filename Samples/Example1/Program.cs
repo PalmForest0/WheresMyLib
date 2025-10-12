@@ -2,10 +2,13 @@
 using WheresMyLib.Core;
 
 Stopwatch timer = Stopwatch.StartNew();
-Game game = Game.Load(@"C:\Water_ 1.18.9");
+Game game = Game.Load(@"C:\Water_ 1.18.9", options: GameOptions.UseHDTextures);
 
 timer.Stop();
 Print($"Successfully loaded game files in {timer.Elapsed.TotalSeconds:0.00} seconds.\n\n", ConsoleColor.DarkGreen);
+
+Print(game.GetObject("bomb.hs").Sprites[0].Animations[0].Atlas.Quality);
+// .GetImage().Save("Test/coo.png");
 
 foreach (var atlas in game.Textures)
     Print(atlas.Quality + "\t| " + atlas.FilePath, ConsoleColor.DarkGreen);

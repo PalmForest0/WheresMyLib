@@ -9,6 +9,9 @@ namespace WheresMyLib.Core;
 
 public class Game
 {
+    public GameType Type { get; private set; }
+    public GameOptions Options { get; private set; }
+
     public string GamePath { get; private set; }
     public string AssetsPath { get; private set; }
     public string LevelsPath { get; private set; }
@@ -23,7 +26,7 @@ public class Game
 
     private Game() { }
 
-    public static Game Load(string rootPath)
+    public static Game Load(string rootPath, GameType type = GameType.WheresMyWater, GameOptions options = GameOptions.None)
     {
         FileUtils.ValidateGameFiles(rootPath);
 
@@ -40,6 +43,9 @@ public class Game
             ObjectsPath = Path.Combine(assetsPath, "Objects"),
             LevelsPath = Path.Combine(assetsPath, "Levels")
         };
+
+        game.Type = type;
+        game.Options = options;
 
         game.Textures = LoadGameFiles<ImageAtlas>(game.TexturesPath, game, file => file.Extension == ".imagelist");
         game.Sprites = LoadGameFiles<Sprite>(game.SpritesPath, game, file => file.Extension == ".sprite");
