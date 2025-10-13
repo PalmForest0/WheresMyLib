@@ -10,6 +10,9 @@ public class Pos
 
     public Pos(float x, float y) => (X, Y) = (x, y);
 
+    public (float x, float y) GetFloats() => (X, Y);
+    public (int x, int y) GetInts() => ((int)X, (int)Y);
+
     /// <summary>
     /// Parses a point from a string (eg. "5.2 10")
     /// </summary>

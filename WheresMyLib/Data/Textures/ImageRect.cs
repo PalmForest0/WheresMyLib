@@ -19,14 +19,12 @@ public class ImageRect
 
     public ImageAtlas ParentAtlas { get; set; }
 
-    public Image ExportImage()
+    public Image GetImage()
     {
-        Image image = ParentAtlas.Image;
-
-        if (image is null)
+        if (ParentAtlas is null)
             return new Image<Rgba32>(1, 1);
 
-        Image croppedImage = image.Clone(ctx => ctx.Crop((Rectangle)Rect));
+        Image croppedImage = ParentAtlas.Image.Clone(ctx => ctx.Crop((Rectangle)Rect));
         return croppedImage;
     }
 }

@@ -1,5 +1,9 @@
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 using System.Xml.Linq;
 using WheresMyLib.Core;
+using WheresMyLib.Data.Sprites;
 using WheresMyLib.Data.Types;
 using WheresMyLib.Utility;
 
@@ -57,6 +61,83 @@ public class GameObject(string filePath, Game game) : GameFile(filePath, game), 
         return spr;
     }
 
+    public Image GetImage()
+    {
+        Pos size = GetCanvasSize(Sprites.Where(s => s.Visible));
+
+        if (size is null)
+            return null;
+
+        (int canvasX, int canvasY) = size.GetInts();
+        Image canvas = new Image<Rgba32>(canvasX, canvasY);
+
+        foreach (var sprite in Sprites.Where(s => s.Visible).OrderBy(s => s.IsBackground ? 0 : 1))
+            LayerSprite(ref canvas, sprite);
+
+        return canvas;
+    }
+
+    private void LayerSprite(ref Image canvas, ObjectSprite sprite)
+    {
+        if (sprite.Animations.IsNullOrEmpty())
+            return;
+        if (sprite.Animations[0].Frames.IsNullOrEmpty())
+            return;
+
+        Frame frame = sprite.Animations[0].Frames[0];
+
+        if (frame.AtlasRect is null)
+            return;
+
+        Image img = frame.AtlasRect.GetImage();
+
+        Pos centre = new Pos((canvas.Width - frame.AtlasRect.Size.X) / 2, (canvas.Height - frame.AtlasRect.Size.Y) / 2);
+
+        Pos offset = new Pos(frame.AtlasRect.Offset.X + sprite.Position.X, frame.AtlasRect.Offset.Y + sprite.Position.Y);
+        offset = new Pos((int)(offset.X * sprite.GridSize.X), (int)(offset.Y * sprite.GridSize.Y));
+
+        Pos otherWierdOffset = frame.Offset is null ? new Pos(0, 0) : frame.Offset;
+
+        int x = (int)(centre.X + offset.X + otherWierdOffset.X);
+        int y = (int)(centre.Y + offset.Y + otherWierdOffset.Y);
+
+        img.Mutate(ctx => ctx.Rotate(sprite.Angle + frame.Angle));
+        canvas.Mutate(ctx => ctx.DrawImage(img, new Point(x, y), 1.0f));
+    }
+
+    private Pos GetCanvasSize(IEnumerable<ObjectSprite> sprites)
+    {
+        List<Pos> corners = new List<Pos>();
+
+        foreach (var sprite in sprites)
+        {
+            if (sprite.Animations.IsNullOrEmpty() || sprite.Animations[0].Frames.IsNullOrEmpty())
+                continue;
+
+            Frame frame = sprite.Animations[0].Frames[0];
+            if (frame.AtlasRect is null)
+                continue;
+
+            float width = frame.AtlasRect.Size.X;
+            float height = frame.AtlasRect.Size.Y;
+
+            // Calculate top left and bottom right corners of each sprite,
+            // assuming that sprite.Position is the centre
+            corners.Add(new Pos(sprite.Position.X - width / 2f, sprite.Position.Y - height / 2f));
+            corners.Add(new Pos(sprite.Position.X + width / 2f, sprite.Position.Y + height / 2f));
+        }
+
+        if (corners.Count == 0)
+            return null;
+
+        // Find the furthest points to get a bounds rectangle
+        float minX = corners.Min(p => p.X);
+        float maxX = corners.Max(p => p.X);
+        float minY = corners.Min(p => p.Y);
+        float maxY = corners.Max(p => p.Y);
+
+        return new Pos(Math.Max(maxX - minX, 1), Math.Max(maxY - minY, 1));
+    }
 
     /// <summary>
     /// Saves this <see cref="GameObject"/> as an XML file with the <c>.hs</c> extension to the loaded game's <c>ObjectsPath</c>.

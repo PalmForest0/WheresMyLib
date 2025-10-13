@@ -1,17 +1,17 @@
-﻿using System.Diagnostics;
+﻿using SixLabors.ImageSharp;
+using System.Diagnostics;
 using WheresMyLib.Core;
 
 Stopwatch timer = Stopwatch.StartNew();
-Game game = Game.Load(@"C:\Water_ 1.18.9", options: GameOptions.UseHDTextures);
+Game game = Game.Load(@"C:\Water_ 1.18.9");
 
 timer.Stop();
 Print($"Successfully loaded game files in {timer.Elapsed.TotalSeconds:0.00} seconds.\n\n", ConsoleColor.DarkGreen);
 
-Print(game.GetObject("bomb.hs").Sprites[0].Animations[0].Atlas.Quality);
-// .GetImage().Save("Test/coo.png");
+//game.GetObject("star.hs").GetImage().Save("Test/coo.png");
 
-foreach (var atlas in game.Textures)
-    Print(atlas.Quality + "\t| " + atlas.FilePath, ConsoleColor.DarkGreen);
+//foreach (var atlas in game.Textures)
+//    Print(atlas.Quality + "\t| " + atlas.FilePath, ConsoleColor.DarkGreen);
 
 //Sprite spr = game.GetSprite("/spout.sprite");
 //spr.Save("Test");
@@ -53,24 +53,26 @@ foreach (var atlas in game.Textures)
 //level.Save(@"Test");
 
 // Export Object textures
-//foreach (var obj in game.Objects)
-//{
-//    if (!Directory.Exists("Objects"))
-//        Directory.CreateDirectory("Objects");
+foreach (var obj in game.Objects)
+{
+    if (!Directory.Exists("Objects"))
+        Directory.CreateDirectory("Objects");
 
-//    Image texture = obj.GetCombinedTexture();
-//    if (texture is not null)
-//    {
-//        texture.Save(Path.Combine("Objects", Path.ChangeExtension($"{obj.FileInfo.FilePath}", ".png")));
-//        texture.Dispose();
+    Image texture = obj.GetImage();
+    string savePath = $"Objects/{obj.FileName}.png";
 
-//        Print($"Successfully saved object texture '{Path.ChangeExtension($"{obj.FileInfo.FilePath}", ".png")}'.", ConsoleColor.DarkGreen);
-//    }
-//    else
-//    {
-//        Print($"Failed to save object texture '{Path.ChangeExtension($"{obj.FileInfo.FilePath}", ".png")}'.", ConsoleColor.Red);
-//    }
-//}
+    if (texture is not null)
+    {
+        texture.Save(savePath);
+        texture.Dispose();
+
+        Print($"Successfully saved object texture of '{obj.FileName}'.", ConsoleColor.DarkGreen);
+    }
+    else
+    {
+        Print($"Failed to save object texture of '{obj.FileName}'.", ConsoleColor.Red);
+    }
+}
 
 //void PrintTextures(Game game)
 //{
